@@ -27,3 +27,6 @@ struct SwiftPlayground {
         print(total)
     }
 }
+
+let [45, 78, 89, 32, 50, 92, 67, 41, 99, 56]
+
