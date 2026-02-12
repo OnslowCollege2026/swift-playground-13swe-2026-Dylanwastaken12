@@ -4,6 +4,11 @@
 @main
 struct SwiftPlayground {
     static func main() {
-        print("Hello, world!")
+        let mixed = ["cat" , "7" , "owl", "15", "dog", "7"]
+        let numbers = mixed.compactMap({ Int in mixed })
+        print(numbers)
     }
 }
+
+
+
