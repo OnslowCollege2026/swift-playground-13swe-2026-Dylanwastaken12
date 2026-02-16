@@ -25,8 +25,31 @@ struct SwiftPlayground {
 
         // prints combined value of even cubed numbers
         print(total)
+
+
+
+        // Map filter and reduce analysing student scores task:
+        let scores = [45, 78, 89, 32, 50, 92, 67, 41, 99, 56]
+
+        // uses map to add 5 to each score in the array then prints it
+        let curvedScores = scores.map { $0 + 5 }
+        print(curvedScores)
+
+        // filters the new array of scores to get rid of any scores under 50
+        // the filter list is then printed
+        let filteredScores = curvedScores.filter { score in
+            return score > 50}
+        print(filteredScores)
+
+        // uses the filtered array to combine scores using reduce then divide by
+        // the number of scores to get an average which is then printed
+        let totalScore = filteredScores.reduce(0) { result, score in
+            result + score}
+        let averageScore = totalScore / 7
+        print(averageScore)
     }
 }
 
-let [45, 78, 89, 32, 50, 92, 67, 41, 99, 56]
+
+
 
