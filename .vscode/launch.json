@@ -4,11 +4,11 @@
             "type": "swift",
             "request": "launch",
             "args": [],
-            "cwd": "${workspaceFolder:SwiftPlayground}",
-            "name": "Debug SwiftPlayground",
-            "target": "SwiftPlayground",
+            "cwd": "${workspaceFolder:swift-playground-13swe-2026-Dylanwastaken12}",
+            "name": "Debug swift-playground-13swe-2026-Dylanwastaken12",
+            "target": "swift-playground-13swe-2026-Dylanwastaken12",
             "configuration": "debug",
-            "preLaunchTask": "swift: Build Debug SwiftPlayground",
+            "preLaunchTask": "swift: Build Debug swift-playground-13swe-2026-Dylanwastaken12",
             "disableASLR": false,
             "initCommands": [
                 "settings set target.disable-aslr false"
@@ -19,16 +19,36 @@
             "type": "swift",
             "request": "launch",
             "args": [],
-            "cwd": "${workspaceFolder:SwiftPlayground}",
-            "name": "Release SwiftPlayground",
-            "target": "SwiftPlayground",
+            "cwd": "${workspaceFolder:swift-playground-13swe-2026-Dylanwastaken12}",
+            "name": "Release swift-playground-13swe-2026-Dylanwastaken12",
+            "target": "swift-playground-13swe-2026-Dylanwastaken12",
             "configuration": "release",
-            "preLaunchTask": "swift: Build Release SwiftPlayground",
+            "preLaunchTask": "swift: Build Release swift-playground-13swe-2026-Dylanwastaken12",
             "disableASLR": false,
             "initCommands": [
                 "settings set target.disable-aslr false"
             ],
             "runInTerminal": true
+        },
+        {
+            "type": "swift",
+            "request": "launch",
+            "args": [],
+            "cwd": "${workspaceFolder:swift-playground-13swe-2026-Dylanwastaken12}",
+            "name": "Debug SwiftPlayground",
+            "target": "SwiftPlayground",
+            "configuration": "debug",
+            "preLaunchTask": "swift: Build Debug SwiftPlayground"
+        },
+        {
+            "type": "swift",
+            "request": "launch",
+            "args": [],
+            "cwd": "${workspaceFolder:swift-playground-13swe-2026-Dylanwastaken12}",
+            "name": "Release SwiftPlayground",
+            "target": "SwiftPlayground",
+            "configuration": "release",
+            "preLaunchTask": "swift: Build Release SwiftPlayground"
         }
     ]
 }
