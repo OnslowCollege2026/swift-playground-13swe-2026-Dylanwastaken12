@@ -4,77 +4,37 @@
 @main
 struct SwiftPlayground {
     static func main() {
+        struct Student {
+            let ID: Int
+            var name: String
+            let NSN: Int
+            var email: String
+            var age: Int
 
-        // compactMap test:
-        let rawScores = ["42", "x", "100", "", "65"]
-        let scores = rawScores.compactMap({Int($0)})
-        print(scores)
+            func summary() -> String {
+            return "\(name) is \(age) years old, their student ID is \(ID) and their NSN is \(NSN), their email is \(email)."
+        }
+        }
+        
+        let dylan = Student(ID: 22774, name: "Dylan", NSN: 0143802249, email: "dylan.jenkins@student.onslow.school.nz", age: 17)
 
-        // allSatisfy test
-        let ages = [13, 14, 15, 16]
-        let allTeenagers = ages.allSatisfy { $0 >= 13 && $0 <= 19}
-        print(allTeenagers)
-
-        // first(where:) and firstIndex(where:) test:
-        let names = ["Aroha", "Moana", "Hana", "Pita"]
-        let firstLongName = names.first { $0.count >= 5 }
-        let firstLongIndex = names.firstIndex { $0.count >= 5 }
-        print(firstLongName ?? "none")
-        print(firstLongIndex ?? -1)
-
-
-        // Task A: hidden numbers:
-
-        // uses compactMap to get rid of all the strings in the collection
-        let mixed = ["cat" , "7" , "owl", "15", "dog", "7"]
-        let numbers = mixed.compactMap({ Int($0) })
-        print(numbers)
-        // uses allSatisfy to see if the new array contains only integers
-        // in this case there are number strings so it returns false
-        let allNumberStrings = mixed.allSatisfy { Int($0) != nil }
-        print(allNumberStrings)
-
-        // Task B: midnight filter:
-
-
-        let sightings = [
-            (name: "moth", score: 3),
-            (name: "wolf", score: 9),
-            (name: "raven", score: 4),
-            (name: "mist", score: 7),
-            (name: "wisp", score: 2)
+        let students: [Student] = [
+            Student(ID: 38465, name: "Bartholemew", NSN: 67, email: "bart.tholemew@student.onslow.school.nz", age: 97),
+            Student(ID: 94769, name: "Bernard", NSN: 12, email: "ber.nard@student.onslow.school.nz", age: 14),
+            Student(ID: 18563, name: "Robert", NSN: 54, email: "rob.ert@student.onslow.school.nz", age: 76),
+            Student(ID: 65346, name: "Thanos", NSN: 75, email: "iam.inevitable@student.onslow.school.nz", age: 100),
+            Student(ID: 19642, name: "Alex", NSN: 24, email: "alex.jenkins@student.onslow.school.nz", age: 15)
         ]
-        // filters the sightings so that any names beggining with anything
-        // other than m or w is deleted
-        let filteredSightings = sightings.filter {
-            $0.0.first == "m" || $0.0.first == "w"
+        
+        let agesInADecade = students.map {
+            "\($0.name) will be \($0.age + 10) in a decade"
         }
+        print(agesInADecade)
 
-        // the scores from the filtered collection are extracted then added together using map, total score is then printed.
-        let sightingScores = filteredSightings.map {
-            $0.score
-        }
-        let totalScores = sightingScores.reduce(0) {
-            $0 + $1
-        }
-        print(totalScores)
+        print("Dylan is \(dylan.age) years old")
 
-        // uses .max and .min to get the hghest and lowest score, these are then printed
-        if let highScore = sightingScores.max { $0 < $1 }, let lowScore =               sightingScores.min { $0 < $1 } {
-            print(highScore)
-            print(lowScore)
-        }
+        
 
-        // Task C: safe input check:
-
-        func accepts(_ input: String, isValid: (String) -> Bool) -> Bool {
-            return isValid(input)
-        }   
-        let sample = "moonlight"
-
+        print(dylan.summary())
     }
-
 }
-
-
-
