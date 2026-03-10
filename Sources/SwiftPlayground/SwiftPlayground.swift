@@ -39,18 +39,22 @@ struct SwiftPlayground {
         // Creates a course for 13SWE.
         let softwareEng = Course(title: "13SWE", id: UUID(), courseDescription: "Sweet Food in Hospitality")
 
-        // Enroles both Stan and Jules in  13SWEusing the enrolement struct.
+        // Enrolls both Stan and Jules in  13SWE using the enrolement struct.
         let julesInSWE: Enrolment = Enrolment(studentID: jules.id, courseID: softwareEng.id)
         let stanInSWE: Enrolment = Enrolment(studentID: stan.id, courseID: softwareEng.id)
 
         // This do catch encodes and decodes the enrolements for Stan and Jules using JSON while catching errors.
         do {
             let julesInSWEEncoded = try JSONEncoder().encode(julesInSWE)
+
+            if let julesInSWEEncodedString = String(data: julesInSWEEncoded, encoding: .utf8) {
+                print("The encoded string is: \(julesInSWEEncodedString)")
+            }
             let julesInSWEDecoded = try JSONDecoder().decode(Enrolment.self, from: julesInSWEEncoded)
 
-            print(julesInSWEDecoded.hashValue)
+            print(" the hash value is: \(julesInSWEDecoded.hashValue)")
         } catch {
-            print("Error: \(error)")
+            print("There was an error decoding the person: \(error)")
         }
         let stanInSWE2: Enrolment = Enrolment(studentID: stan.id, courseID: softwareEng.id)
 
