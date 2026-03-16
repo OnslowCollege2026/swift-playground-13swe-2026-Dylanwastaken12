@@ -3,11 +3,19 @@
 import Foundation
 import GRDB
 
+/// Represents an item in the menu.
 struct Item: Identifiable, Codable, FetchableRecord, PersistableRecord {
+
+    /// The id of the item.
     let id: Int
+
+    /// The name of the item.
     var name: String
+
+    /// The price of the item.
     var price: Double
 
+/// CodingKeys syncs the variables to the database.
     enum CodingKeys: String, CodingKey {
         case id = "ItemID"
         case name = "Name"
@@ -15,11 +23,19 @@ struct Item: Identifiable, Codable, FetchableRecord, PersistableRecord {
     }
 }
 
+/// Represents an order made by the purchaser.
 struct Order: Identifiable, Codable, FetchableRecord, PersistableRecord {
+
+    /// The id of the order.
     let id: Int
+
+    /// The id of the purchaser of the order.
     let purchaserid: Int
+
+    /// The amount ordered.
     var amount: Int
 
+/// CodingKeys syncs the variables to the database.
     enum CodingKeys: String, CodingKey {
         case id = "ItemID"
         case purchaserid = "purchaserID"
@@ -27,11 +43,19 @@ struct Order: Identifiable, Codable, FetchableRecord, PersistableRecord {
     }
 }
 
-struct OrderLine: Identifiable, Codable, FetchableRecord, PersistableRecord {
+/// Used to avoid the many-to-many relationship between the Item table and Order table.
+struct OrderLine: Codable, FetchableRecord, PersistableRecord {
+
+    /// The id of the order.
     let orderid: Int
+
+    /// The id of the item.
     let itemid: Int
+
+    /// The quantity of items ordered.
     var quantity: Int
 
+/// CodingKeys syncs the variables to the database.
     enum CodingKeys: String, CodingKey {
         case orderid = "OrderID"
         case itemid = "ItemID"
@@ -39,12 +63,22 @@ struct OrderLine: Identifiable, Codable, FetchableRecord, PersistableRecord {
     }
 }
 
+/// Represents the purchaser of the order.
 struct Purchaser: Identifiable, Codable, FetchableRecord, PersistableRecord {
+
+    /// The id of the purchaser.
     let id: Int
+
+    /// The name of the purchaser.
     var name: String
+
+    /// The number of people in the purchaser's group.
     var count: Int
+
+    /// The table of the purchaser.
     var reservedtable: String
 
+/// CodingKeys syncs the variables to the database.
     enum CodingKeys: String, CodingKey {
         case id = "PurchaserID"
         case name = "Name"
@@ -60,8 +94,25 @@ struct SwiftPlayground {
         do {
             let dbQueue = try DatabaseQueue(path: dbPath)
             print("database connection succesful")
+            try dbQueue.read { db in
+                let schema = try db.dumpSchema()
+                print(schema)}
+            
+            let purchaserId: Int = 2
+
+            try dbQueue.read { db in
+                let purchaser = try Purchaser.fetchOne(db, key: purchaserId)
+                if let purchaser {
+                    print("Found purchaser: \(purchaser.name)")
+                } else {
+                    print("No purchaser with id \(purchaserId)")
+                }
+                }
         } catch {
             print("Database error: \(error)")
         }
+
+
+
     }
 }
