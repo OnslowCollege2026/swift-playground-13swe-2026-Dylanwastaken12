@@ -64,7 +64,7 @@ struct OrderLine: Codable, FetchableRecord, PersistableRecord {
 }
 
 /// Represents the purchaser of the order.
-struct Purchaser: Identifiable, Codable, FetchableRecord, PersistableRecord {
+struct Purchaser: Identifiable, Codable, FetchableRecord, PersistableRecord, TableRecord {
 
     /// The id of the purchaser.
     let id: Int
@@ -76,14 +76,19 @@ struct Purchaser: Identifiable, Codable, FetchableRecord, PersistableRecord {
     var count: Int
 
     /// The table of the purchaser.
-    var reservedtable: String
+    var reservedTable: String
 
 /// CodingKeys syncs the variables to the database.
     enum CodingKeys: String, CodingKey {
         case id = "PurchaserID"
         case name = "Name"
         case count = "Count"
-        case reservedtable = "ReservedTable"
+        case reservedTable = "ReservedTable"
+    }
+    enum Columns {
+        static let name = Column(CodingKeys.name)
+        static let count = Column(CodingKeys.count)
+        static let reservedTable = Column(CodingKeys.reservedTable)
     }
 }
 
@@ -95,8 +100,8 @@ struct SwiftPlayground {
             let dbQueue = try DatabaseQueue(path: dbPath)
             print("database connection succesful")
             try dbQueue.read { db in
-                let schema = try db.dumpSchema()
-                print(schema)}
+                try db.dumpSchema()
+            }
             
             let purchaserId: Int = 2
 
@@ -107,7 +112,29 @@ struct SwiftPlayground {
                 } else {
                     print("No purchaser with id \(purchaserId)")
                 }
+            }
+            
+            try dbQueue.read { db in
+                let filteredPurchaser = try Purchaser
+                    .filter(Purchaser.Columns.name == "Matua Doc")
+                    .fetchOne(db)
+                
+                if let filteredPurchaser {
+                    print("Found by name: \(filteredPurchaser)")
+                } else {
+                    print("No match for name Matua Doc")
                 }
+            }
+            try dbQueue.read { db in
+                let largeGroups = try Purchaser
+                    .filter(Purchaser.Columns.count >= 15)
+                    .order(Purchaser.Columns.name)
+                    .fetchAll(db)
+
+                for purchaser in largeGroups {
+                    print("\(purchaser.name) has a group size of \(purchaser.count)")
+                }
+            }
         } catch {
             print("Database error: \(error)")
         }
