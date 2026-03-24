@@ -95,25 +95,40 @@ struct Purchaser: Identifiable, Codable, FetchableRecord, PersistableRecord, Tab
 @main
 struct SwiftPlayground {
     static func main() {
+
+        // Links to the database.
         let dbPath = "Sources/SwiftPlayground/cafe.db"
         do {
             let dbQueue = try DatabaseQueue(path: dbPath)
             print("database connection succesful")
-            try dbQueue.read { db in
+
+            // Dumps schema.
+            try? dbQueue.read { db in
                 try db.dumpSchema()
             }
-            
-            let purchaserId: Int = 2
 
-            try dbQueue.read { db in
+            // Searches the database for any purchasers with the id "purchaserId"
+            let purchaserId: Int = 2
+            try? dbQueue.read { db in
                 let purchaser = try Purchaser.fetchOne(db, key: purchaserId)
                 if let purchaser {
-                    print("Found purchaser: \(purchaser.name)")
+                    print("Found purchaser with id '2': \(purchaser.name)")
                 } else {
-                    print("No purchaser with id \(purchaserId)")
+                    print("No purchaser with id '2' \(purchaserId)")
                 }
             }
-            
+
+            // Searches the database for the item with id "1"
+            try dbQueue.read {db in
+                let item = try Item.fetchOne(db, id: 1)
+                if let item {
+                    print(item)
+                } else {
+                    print("couldn't find an item with that id")
+                }
+            }
+
+            // Searches the database for anyone with the name "Matua Doc"
             try dbQueue.read { db in
                 let filteredPurchaser = try Purchaser
                     .filter(Purchaser.Columns.name == "Matua Doc")
@@ -125,21 +140,28 @@ struct SwiftPlayground {
                     print("No match for name Matua Doc")
                 }
             }
+
+            // Searches the database for purchasers with groups larger than 15, the orders them by name.
             try dbQueue.read { db in
                 let largeGroups = try Purchaser
                     .filter(Purchaser.Columns.count >= 15)
                     .order(Purchaser.Columns.name)
                     .fetchAll(db)
-
+                    
                 for purchaser in largeGroups {
                     print("\(purchaser.name) has a group size of \(purchaser.count)")
                 }
             }
+
+            try dbQueue.read { db in
+                if let order = try Order.fetchOne(db, id: 1), let purchaser = try Purchaser.fetchOne(db, id: order.purchaserid) {
+                    print("Order #\(order.id) for \(purchaser.name) --- $\(order.amount)")
+                }
+            }
+
+        // Errors are caught here.
         } catch {
             print("Database error: \(error)")
         }
-
-
-
     }
 }
