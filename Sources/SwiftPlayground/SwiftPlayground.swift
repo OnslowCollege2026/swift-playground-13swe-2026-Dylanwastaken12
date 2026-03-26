@@ -96,7 +96,10 @@ import Foundation
             while isRunning {
                 print("\nEnter Name (or 'done'): ", terminator: "")
                 
-                let nameInput = readLine()! 
+                guard let nameInput = readLine(), nameInput.count >= 1 else {
+                    print("Invalid name")
+                    continue
+                }
 
                 if nameInput.lowercased() == "done" {
                     isRunning = false
@@ -104,21 +107,13 @@ import Foundation
                 }
 
                 print("Enter Amount: ", terminator: "")
-                
-                do {
-                    let amountInput = readLine()!
-                    let amount = Double(amountInput)!
 
+                if let amountInput = readLine(), let amount = Double(amountInput), amount >= 0 {
                     let newGuest = Guest(name: nameInput, contribution: Contribution(amount: amount))
                     app.guestList.append(newGuest)
                     print("Added \(nameInput).")
                 }
-
-                catch {
-                    print(error)
-                }
             }
-
             app.printTierList()
         }
     }
