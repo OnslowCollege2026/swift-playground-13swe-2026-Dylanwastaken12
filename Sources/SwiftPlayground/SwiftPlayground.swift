@@ -46,15 +46,10 @@ struct SwiftPlayground {
         var userEntry: String = ""
         var userChoice: String = ""
 
-        // Creates variables used by the programm to add books to the array.
-        var userBookTitle: String = ""
-        var userBookAuthor: String = ""
-        var userBookEntry = ""
-
         var userName: String = ""
         var userAge: Int = 0
         // Creates a list of books using the "Book" struct.
-        var books = (
+        var books = [
             Book(id: UUID(), bookTitle: "Wool", available: true, author: "Hugh Howey"),
             Book(id: UUID(), bookTitle: "Shift", available: false, author: "Hugh Howey"),
             Book(id: UUID(), bookTitle: "BookA", available: true, author: "Dylan"),
@@ -62,28 +57,34 @@ struct SwiftPlayground {
             Book(id: UUID(), bookTitle: "Memoir", available: false, author: "Bernard"),
             Book(id: UUID(), bookTitle: "BookB", available: true, author: "Oli"),
             Book(id: UUID(), bookTitle: "BookC", available: true, author: "Theo")
-        )
+        ]
         var students = (
             Student(id: UUID(), name: "Dylan", age: 17)
         )
         // Prints a message to start the programm
         print("Hello, welcome to the Onslow Book Borrowing System, how may we help you?, A: Add a book to the library? | B: Register a borrower/User? | C: Print a list of books? | D: Issue a book to a student?")
         do {
-            userEntry = readLine()
-            userChoice = String(userEntry)
+            if let userEntry = readLine() {
+                if userEntry.lowercased() == "a" {
+                    
+                    print("What is the name of the book?")
+                    if let userBookTitle = readLine() {
+                        
+                    }
+                    print("Who is the author?")
+                    if let userBookAuthor = readLine() {
+
+                    }
+
+                    var userBookEntry: Book = Book(id: UUID(), bookTitle: userBookTitle, available: true,   author: userBookAuthor);
+                    books.append(userbookEntry)
+                    print("The new list of available books is \(books)")
+        }
+            }
             } catch {
                 print(error)
             }
-        if userEntry.lowercased() = "a" {
-            print("What is the name of the book?")
-            userBookTitle = readline()
-            print("Who is the author?")
-            userBookAuthor = readline()
-
-            userBookEntry: Book = Book(id: UUID(), bookTitle: userBookTitle, available: true,   author: userBookAuthor)
-            books.append userBookEntry
-            print(books)
-        }
+        
 
         if userEntry.lowercased() == "d" {
             print("What is your name?")
@@ -100,4 +101,3 @@ struct SwiftPlayground {
         }
     }
 }
-
