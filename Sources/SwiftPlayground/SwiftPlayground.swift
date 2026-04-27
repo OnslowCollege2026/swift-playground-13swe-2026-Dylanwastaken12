@@ -13,6 +13,11 @@ struct Book: Identifiable, Hashable, Equatable, CustomStringConvertible {
     let bookTitle: String
     let available: Bool
     let author: String
+    var description: String 
+        {"""
+        This book is called \(bookTitle), the author is \(author), 
+        it's availability is \(available)
+        """}
 }
 
 /// This struct contains the students who will be issuing out the books.
@@ -23,16 +28,19 @@ struct Student: CustomStringConvertible, Identifiable, Hashable {
     let id: UUID
     var name: String
     var age: Int
+    var description: String {"The sutdent's name is \(name) they are \(age) years old and their id is \(id)"}
 }
 
 
 /// This struct contains each request to issue a book from a student.
+///     id: The id of the request for a student to issue a book.
 ///     studentID: the id of the student issuing the book.
 ///     bookID: the id of the book they are issuing.
 struct Request: Hashable, CustomStringConvertible, Identifiable, Equatable {
+    let id: UUID
     let studentID: UUID
     let bookID: UUID
-    var requestDescription: String {"\(studentID), \(bookID)"}
+    var description: String {"This is a request for a student with id \(studentID) to issue a book with id \(bookID)"}
     }
 
 
@@ -41,7 +49,7 @@ struct Request: Hashable, CustomStringConvertible, Identifiable, Equatable {
 @main
 struct SwiftPlayground {
     static func main() {
-        
+
         // Creates variables that are used for the user's entry.
         var userEntry: String = ""
         var userChoice: String = ""
@@ -61,43 +69,22 @@ struct SwiftPlayground {
         var students = (
             Student(id: UUID(), name: "Dylan", age: 17)
         )
-        // Prints a message to start the programm
+        // Prints a message to start the program.
         print("Hello, welcome to the Onslow Book Borrowing System, how may we help you?, A: Add a book to the library? | B: Register a borrower/User? | C: Print a list of books? | D: Issue a book to a student?")
-        do {
-            if let userEntry = readLine() {
-                if userEntry.lowercased() == "a" {
-                    
-                    print("What is the name of the book?")
-                    if let userBookTitle = readLine() {
-                        
-                    }
-                    print("Who is the author?")
-                    if let userBookAuthor = readLine() {
-
-                    }
-
-                    var userBookEntry: Book = Book(id: UUID(), bookTitle: userBookTitle, available: true,   author: userBookAuthor);
-                    books.append(userbookEntry)
-                    print("The new list of available books is \(books)")
-        }
-            }
-            } catch {
-                print(error)
-            }
         
-
-        if userEntry.lowercased() == "d" {
-            print("What is your name?")
-            userName = readline()
-            print("What is your age?")
-            do {
-                userAge = Int(readline())
-            } catch {
-                print("Error: \(error)")
+        if let userEntry = readLine() {
+            if userEntry.lowercased() == "a" {
+                print("What is the name of the book?")
+                if let userBookTitle = readLine() {
+                }
+                print("Who is the author?")
+                if let userBookAuthor = readLine() {
+                }
+                var userBookEntry = Book(id: UUID(), bookTitle: userBookTitle, available: true, author: userBookAuthor);
+                books.append(userBookEntry)
+                print("The new list of available books is \(books)")
             }
-
-            
-
-        }
+        }    
     }
 }
+
