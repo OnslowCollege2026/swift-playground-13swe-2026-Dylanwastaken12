@@ -14,10 +14,7 @@ struct Book: Identifiable, Hashable, Equatable, CustomStringConvertible {
     let available: Bool
     let author: String
     var description: String 
-        {"""
-        This book is called \(bookTitle), the author is \(author), 
-        it's availability is \(available)
-        """}
+        {"This book is called \(bookTitle), the author is \(author), it's availability is \(available)"}
 }
 
 /// This struct contains the students who will be issuing out the books.
@@ -54,6 +51,9 @@ struct SwiftPlayground {
         var userEntry: String = ""
         var userChoice: String = ""
 
+        var test1: String = "test1"
+        var test2: String = "test2"
+
         var userName: String = ""
         var userAge: Int = 0
         // Creates a list of books using the "Book" struct.
@@ -75,12 +75,11 @@ struct SwiftPlayground {
         if let userEntry = readLine() {
             if userEntry.lowercased() == "a" {
                 print("What is the name of the book?")
-                if let userBookTitle = readLine() {
-                }
+                if let userBookTitle = readLine() {}
                 print("Who is the author?")
                 if let userBookAuthor = readLine() {
                 }
-                var userBookEntry = Book(id: UUID(), bookTitle: userBookTitle, available: true, author: userBookAuthor);
+                var userBookEntry = Book(id: UUID(), bookTitle: test1, available: true, author: test2)
                 books.append(userBookEntry)
                 print("The new list of available books is \(books)")
             }
