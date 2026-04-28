@@ -72,18 +72,31 @@ struct SwiftPlayground {
         // Prints a message to start the program.
         print("Hello, welcome to the Onslow Book Borrowing System, how may we help you?, A: Add a book to the library? | B: Register a borrower/User? | C: Print a list of books? | D: Issue a book to a student?")
         
-        if let userEntry = readLine() {
-            if userEntry.lowercased() == "a" {
-                print("What is the name of the book?")
-                if let userBookTitle = readLine() {}
-                print("Who is the author?")
-                if let userBookAuthor = readLine() {
-                }
-                var userBookEntry = Book(id: UUID(), bookTitle: test1, available: true, author: test2)
-                books.append(userBookEntry)
-                print("The new list of available books is \(books)")
+        guard let userEntry = readLine(), !userEntry.isEmpty else {
+            print("please enter a valid input")
+            return
+        }
+        if userEntry.lowercased() == "a" {
+            let userBookTitle: String = ""
+            let userBookAuthor: String = ""
+
+            print("What is the name of the book?")
+            guard let userBookTitle = readLine(), !userBookTitle.isEmpty else {
+                print("Book Title is required")
+                return
             }
-        }    
-    }
+            print("Your book title is \(userBookTitle)")
+
+            print("Who is the author?")
+            guard let userBookAuthor = readLine(), !userBookAuthor.isEmpty else {
+                print("Book Author is required")
+                return
+            }
+            var userBookEntry = Book(id: UUID(), bookTitle: userBookTitle, available: true, author: userBookAuthor)
+            books.append(userBookEntry)
+            print("The new list of available books is \(books)")
+        }
+    }    
 }
+
 
