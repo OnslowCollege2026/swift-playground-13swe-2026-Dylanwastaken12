@@ -25,7 +25,7 @@ struct Student: CustomStringConvertible, Identifiable, Hashable {
     let id: UUID
     var name: String
     var age: Int
-    var description: String {"| The sutdent's name is \(name) they are \(age) years old and their id is \(id) |"}
+    var description: String {"| The student's name is \(name) they are \(age) years old and their id is \(id) |"}
 }
 
 
@@ -33,11 +33,11 @@ struct Student: CustomStringConvertible, Identifiable, Hashable {
 ///     id: The id of the request for a student to issue a book.
 ///     studentID: the id of the student issuing the book.
 ///     bookID: the id of the book they are issuing.
-struct Request: Hashable, CustomStringConvertible, Identifiable, Equatable {
+struct Loan: Hashable, CustomStringConvertible, Identifiable, Equatable {
     let id: UUID
     let studentID: UUID
     let bookID: UUID
-    var description: String {"This is a request for a student with id \(studentID) to issue a book with id \(bookID)"}
+    var description: String {"This is a Loan for a student with id \(studentID) to issue a book with id \(bookID)"}
     }
 
 
@@ -61,9 +61,16 @@ struct SwiftPlayground {
         ]
 
         // Creates a list of students.
-        var students = (
+        var students = [
             Student(id: UUID(), name: "Dylan", age: 17)
-        )
+        ]
+
+        // Creates function used to convert optional strings, to integers.
+        func stringToInt(string: String) -> Int {
+            guard let intValue = Int(string) else {return 0}
+            return intValue
+        }
+
         // Prints a message to start the program.
         print("Hello, welcome to the Onslow Book Borrowing System, how may we help you?, A: Add a book to the library? | B: Register a borrower/User? | C: Print a list of books? | D: Issue a book to a student?")
         
@@ -108,41 +115,44 @@ struct SwiftPlayground {
 
 
 
-
+        // If user enters b: This part of the code will deal with adding a new user to the list of students.
         if userEntry.lowercased() == "b" {
+
+            // Variables used later for getting the user's input.
             var userAgeInput: String = ""
             var userName: String = ""
 
+            // Asks what the new student's name is, doesn't allow it if user enters null.
             print("What is the name of the student you're adding?")
             guard let userName = readLine(), !userName.isEmpty else {
                 print("Name is required")
                 return
             }
 
-            do {
-                print("How old is the student?")
-                guard let userAgeInput = readLine(), !userAgeInput.isEmpty else {
-                    print("Age is required")
-                    return
-                }
+            // Asks the new student's name, doesn't allow it if user enters null.
+            print("How old is the student?")
+            guard let userAgeInput = readLine(), !userAgeInput.isEmpty else {
+                print("Age is required")
+                return
+            }
 
-                var userAge = Int(userAgeInput)
-            } catch {
-                print(error)
+            // Uses stringToInt function to safely convert the optional string from the user input to an Int.
+            let userAge = stringToInt(string: userAgeInput)
 
-                var studentEntry = Student(id: UUID(), name: userName, age: userAge)
+            // Creates new instance of the Student struct, assigns it to a variable, then adds it to the student list.
+            var studentEntry = Student(id: UUID(), name: userName, age: userAge)
+            students.append(studentEntry)
+
+            // Prints the new list of students.
+            print("The new list of students is \(students)")
             }
 
             
 
-            print("The new list of students is \(students)")
+            
 
-        }
-
-        if userEntry.lowercased() == "c" {
-            print("List of available books is \(books)")
         }
     }    
-}
+
 
 
