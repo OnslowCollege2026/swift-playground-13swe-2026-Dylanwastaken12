@@ -11,7 +11,7 @@ import Foundation
 struct Book: Identifiable, Hashable, Equatable, CustomStringConvertible {
     let id: UUID
     let bookTitle: String
-    let available: Bool
+    var available: Bool
     let author: String
     var description: String 
         {"| This book is called \(bookTitle), the author is \(author), it's availability is \(available) |"}
@@ -37,6 +37,7 @@ struct Loan: Hashable, CustomStringConvertible, Identifiable, Equatable {
     let id: UUID
     let studentID: UUID
     let bookID: UUID
+    let isReturned: Bool
     var description: String {"This is a Loan for a student with id \(studentID) to issue a book with id \(bookID)"}
     }
 
@@ -59,6 +60,11 @@ struct SwiftPlayground {
             Book(id: UUID(), bookTitle: "BookB", available: true, author: "Oli"),
             Book(id: UUID(), bookTitle: "BookC", available: true, author: "Theo")
         ]
+        func availableBooks() -> [String] {
+            let availableBooks = books.filter {book in
+                return book.available = true
+            }
+        }
 
         // Creates a list of students.
         var students = [
@@ -71,8 +77,11 @@ struct SwiftPlayground {
             return intValue
         }
 
+        // Creates a boolean to use in a hwile loops while the user is inputting ther age.
+        var inputtingAge: Bool = true
+
         // Prints a message to start the program.
-        print("Hello, welcome to the Onslow Book Borrowing System, how may we help you?, A: Add a book to the library? | B: Register a borrower/User? | C: Print a list of books? | D: Issue a book to a student?")
+        print("Hello, welcome to the Onslow Book Borrowing System, how may we help you?, A: Add a book to the library? | B: Register a borrower/User? | C: Print a list of available books? | D: Issue a book to a student?")
         
         // Aquires user's choice and returns it if it is null.
         guard let userEntry = readLine(), !userEntry.isEmpty else {
@@ -136,12 +145,26 @@ struct SwiftPlayground {
                 return
             }
 
-            // Uses stringToInt function to safely convert the optional string from the user input to an Int.
-            let userAge = stringToInt(string: userAgeInput)
+            while inputtingAge == true {
+                inputtingAge = false
+                print("How old is the student?")
+                guard let userAgeInput = readLine(), !userAgeInput.isEmpty else {
+                    print("Age is required")
+                    return
+                }
+                if let userAge = Int(userAgeInput) {
+                    print("The age you entered was \(userAge)")
+                    var studentEntry = Student(id: UUID(), name: userName, age: userAge)
+                    students.append(studentEntry)
+                } else {
+                    print("Invalid input, please enter a whole number")
+                    inputtingAge = true
+                }
+            }
 
             // Creates new instance of the Student struct, assigns it to a variable, then adds it to the student list.
-            var studentEntry = Student(id: UUID(), name: userName, age: userAge)
-            students.append(studentEntry)
+            
+            
 
             // Prints the new list of students.
             print("The new list of students is \(students)")
@@ -149,9 +172,12 @@ struct SwiftPlayground {
 
             
 
-            
+        if userEntry.lowercased() == "c" {
+        }
 
         }
+
+        
     }    
 
 
