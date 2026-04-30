@@ -60,11 +60,8 @@ struct SwiftPlayground {
             Book(id: UUID(), bookTitle: "BookB", available: true, author: "Oli"),
             Book(id: UUID(), bookTitle: "BookC", available: true, author: "Theo")
         ]
-        func availableBooks() -> [String] {
-            let availableBooks = books.filter {book in
-                return book.available = true
-            }
-        }
+        // func availableBooks() -> [String] {
+        //    let availableBooks = books.filter {$0.available = true}
 
         // Creates a list of students.
         var students = [
@@ -77,108 +74,93 @@ struct SwiftPlayground {
             return intValue
         }
 
-        // Creates a boolean to use in a hwile loops while the user is inputting ther age.
+        // Creates a boolean to use in a while loops while the user is inputting information.
         var inputtingAge: Bool = true
+        var inputting: Bool = true
+        var codeRunning: Bool = true
 
         // Prints a message to start the program.
         print("Hello, welcome to the Onslow Book Borrowing System, how may we help you?, A: Add a book to the library? | B: Register a borrower/User? | C: Print a list of available books? | D: Issue a book to a student?")
         
         // Aquires user's choice and returns it if it is null.
-        guard let userEntry = readLine(), !userEntry.isEmpty else {
-            print("please enter a valid input")
-            return
-        }
+        if let userEntry = readLine(), !userEntry.isEmpty {
+            if userEntry.lowercased() == "a" {
 
-        // Code for if the user wants to add a book to the library.
-        if userEntry.lowercased() == "a" {
+                // Creates variables which are used for user input for title and author.
+                let userBookTitle: String = ""
+                let userBookAuthor: String = ""
 
-            // Creates variables which are used for user input for title and author.
-            let userBookTitle: String = ""
-            let userBookAuthor: String = ""
+                // Asks user what the title is, value is returned if the input is null, their choice is then printed.
+                print("What is the name of the book?")
+                guard let userBookTitle = readLine(), !userBookTitle.isEmpty else {
+                    print("Book Title is required")
+                    return 
+                }
+                print("Your book title is \(userBookTitle)")
 
-            // Asks user what the title is, value is returned if the input is null, their choice is then printed.
-            print("What is the name of the book?")
-            guard let userBookTitle = readLine(), !userBookTitle.isEmpty else {
-                print("Book Title is required")
-                return
-            }
-            print("Your book title is \(userBookTitle)")
+                // Asks the user who the author of the book is, 
+                // value is returned if input is null, their choice is then printed.
+                print("Who is the author?")
+                guard let userBookAuthor = readLine(), !userBookAuthor.isEmpty else {
+                    print("Book Author is required")
+                    return
+                }
+                print("Your author is \(userBookAuthor)")
 
-            // Asks the user who the author of the book is, 
-            // value is returned if input is null, their choice is then printed.
-            print("Who is the author?")
-            guard let userBookAuthor = readLine(), !userBookAuthor.isEmpty else {
-                print("Book Author is required")
-                return
-            }
-            print("Your author is \(userBookAuthor)")
-
-            // Creates a new instance of the "Book" Struct using the variables aquired from user input,
-            // This instance is assigned to a variable which is added to the list of books.
-            var userBookEntry = Book(id: UUID(), bookTitle: userBookTitle, available: true, author: userBookAuthor)
-            books.append(userBookEntry)
-            print("The new list of available books is \(books)")
-        }
-
-
-
-
-
-        // If user enters b: This part of the code will deal with adding a new user to the list of students.
-        if userEntry.lowercased() == "b" {
-
-            // Variables used later for getting the user's input.
-            var userAgeInput: String = ""
-            var userName: String = ""
-
-            // Asks what the new student's name is, doesn't allow it if user enters null.
-            print("What is the name of the student you're adding?")
-            guard let userName = readLine(), !userName.isEmpty else {
-                print("Name is required")
-                return
+                // Creates a new instance of the "Book" Struct using the variables aquired from user input,
+                // This instance is assigned to a variable which is added to the list of books.
+                var userBookEntry = Book(id: UUID(), bookTitle: userBookTitle, available: true, author: userBookAuthor)
+                books.append(userBookEntry)
+                print("The new list of available books is \(books)")
             }
 
-            // Asks the new student's name, doesn't allow it if user enters null.
-            print("How old is the student?")
-            guard let userAgeInput = readLine(), !userAgeInput.isEmpty else {
-                print("Age is required")
-                return
-            }
 
-            while inputtingAge == true {
-                inputtingAge = false
+
+
+            // If user enters b: This part of the code will deal with adding a new user to the list of students.
+            if userEntry.lowercased() == "b" {
+
+                // Variables used later for getting the user's input.
+                var userAgeInput: String = ""
+                var userName: String = ""
+
+                // Asks what the new student's name is, doesn't allow it if user enters null.
+                print("What is the name of the student you're adding?")
+                guard let userName = readLine(), !userName.isEmpty else {
+                    print("Name is required")
+                    return
+                }
+
+                // Asks the new student's name, doesn't allow it if user enters null.
                 print("How old is the student?")
                 guard let userAgeInput = readLine(), !userAgeInput.isEmpty else {
                     print("Age is required")
                     return
                 }
-                if let userAge = Int(userAgeInput) {
-                    print("The age you entered was \(userAge)")
-                    var studentEntry = Student(id: UUID(), name: userName, age: userAge)
-                    students.append(studentEntry)
-                } else {
-                    print("Invalid input, please enter a whole number")
-                    inputtingAge = true
+
+                while inputtingAge == true {
+                    inputtingAge = false
+                    print("How old is the student?")
+                    guard let userAgeInput = readLine(), !userAgeInput.isEmpty else {
+                        print("Age is required")
+                        return
+                    }
+                    if let userAge = Int(userAgeInput) {
+                        print("The age you entered was \(userAge)")
+                        var studentEntry = Student(id: UUID(), name: userName, age: userAge)
+                        students.append(studentEntry)
+                    } else {
+                        print("Invalid input, please enter a whole number")
+                        inputtingAge = true
+                    }
                 }
+
+                // Prints the new list of students.
+                print("The new list of students is \(students)")
             }
-
-            // Creates new instance of the Student struct, assigns it to a variable, then adds it to the student list.
-            
-            
-
-            // Prints the new list of students.
-            print("The new list of students is \(students)")
-            }
-
-            
-
-        if userEntry.lowercased() == "c" {
         }
-
-        }
-
-        
-    }    
+    }
+}    
 
 
 
