@@ -139,7 +139,7 @@ struct SwiftPlayground {
                         return
                     }
 
-                    //This block of code gets the user's age, it is done in a while loop to repeat if there is an error.
+                    // This block of code gets the user's age, it is done in a while loop to repeat if there is an error.
                     while inputtingAge == true {
                         inputtingAge = false
                         // Asks for the student's age, this is stored as an optional string.
@@ -175,7 +175,7 @@ struct SwiftPlayground {
                     // Prints the list of books for the user to choose from.
                     print(books)
 
-                    // Starts a new while loop so the questions can be reasked if there is an incorrect input.
+                    // Loops until there is a correct input.
                     while inputting == true {
                         inputting = false
 
@@ -194,6 +194,7 @@ struct SwiftPlayground {
                             inputting = true
                         }
                     }
+                    
                 }
                 // This else is for the while loop for the initial userEntry.
             } else {
