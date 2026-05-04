@@ -74,8 +74,9 @@ struct SwiftPlayground {
 
         // Creates booleans to use in while loops while the user is inputting information.
         var inputtingAge: Bool = true
-        var inputting: Bool = true
+        var inputtingBorrower: Bool = true
         var codeRunning: Bool = true
+        var inputtingBook: Bool = true
 
         
         // Starts while loop the code runs inside, when the user ends the program, this loop is broken.
@@ -122,47 +123,43 @@ struct SwiftPlayground {
                 if userEntry.lowercased() == "b" {
 
                     // Variables used later for getting the user's input.
-                    var userAgeInput: String = ""
-                    var userName: String = ""
+                    var userAgeInput: String
+                    var userName: String
 
-                    // Asks what the new student's name is, doesn't allow it if user enters null.
-                    print("What is the name of the student you're adding?")
-                    guard let userName = readLine(), !userName.isEmpty else {
-                        print("Name is required")
-                        return
-                    }
+                    while inputtingBorrower{
+                        // Asks what the new student's name is, doesn't allow it if user enters null.
+                        print("What is the name of the student you're adding?")
+                        guard let userName = readLine(), !userName.isEmpty else {
+                            print("Name is required")
+                            return
+                        }
+                        
 
-                    // Asks the new student's name, doesn't allow it if user enters null.
-                    print("How old is the student?")
-                    guard let userAgeInput = readLine(), !userAgeInput.isEmpty else {
-                        print("Age is required")
-                        return
-                    }
-
-                    // This block of code gets the user's age, it is done in a while loop to repeat if there is an error.
-                    while inputtingAge == true {
-                        inputtingAge = false
+                        // Asks the new student's name, doesn't allow it if user enters null.
+                        print("How old is the student?")
+                        guard let userAgeInput = readLine(), !userAgeInput.isEmpty else {
+                            print("Age is required")
+                            return 
+                        }
                         // Asks for the student's age, this is stored as an optional string.
                         print("How old is the student?")
                         guard let userAgeInput = readLine(), !userAgeInput.isEmpty else {
                             print("Age is required")
                             return
                         }
-                        
-                        // An if let statement is used to attempt to convert the optional string to an integer,
-                        // If this is acheived, a new instance of a struct is created, if not, the while loop repeats.
                         if let userAge = Int(userAgeInput) {
                             print("The age you entered was \(userAge)")
                             students.append(Student(id: UUID(), name: userName, age: userAge))
                         } else {
                             print("Invalid input, please enter a whole number")
-                            inputtingAge = true
+                            inputtingBorrower = true
                         }
                     }
 
                     // Prints the new list of students.
                     print("The new list of students is \(students)")
                 }
+                
 
                 // If the user enters "c" the while loop breaks and the program ends.
                 if userEntry.lowercased() == "c" {
@@ -176,8 +173,8 @@ struct SwiftPlayground {
                     print(books)
 
                     // Loops until there is a correct input.
-                    while inputting == true {
-                        inputting = false
+                    while inputtingBorrower == true {
+                        inputtingBorrower = false
 
                         // Asks the user what boo they want, returns if the input is null.
                         print("Which book would you like to issue? type the number in the list of the book")
@@ -191,7 +188,7 @@ struct SwiftPlayground {
                             print("The choice you entered was \(bookChoice)")
                         } else {
                             print("Invalid input, please enter a whole number")
-                            inputting = true
+                            inputtingBorrower = true
                         }
                     }
                     
