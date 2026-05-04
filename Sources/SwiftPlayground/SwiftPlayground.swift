@@ -135,7 +135,7 @@ struct SwiftPlayground {
                         guard let userName = readLine(), !userName.isEmpty else {
                             print("Name is required")
                             inputtingBorrower = true
-                            return
+                            continue
                         }
                         
                         // Asks the new student's name, doesn't allow it if user enters null.
@@ -143,9 +143,8 @@ struct SwiftPlayground {
                         guard let userAgeInput = readLine(), !userAgeInput.isEmpty else {
                             print("Age is required")
                             inputtingBorrower = true
-                            return 
+                            continue 
                         }
-
                         if let userAge = Int(userAgeInput) {
                             print("The age you entered was \(userAge)")
                             students.append(Student(id: UUID(), name: userName, age: userAge))
@@ -168,18 +167,21 @@ struct SwiftPlayground {
                 // This part of the code runs when the user is issuing out a book.
                 if userEntry.lowercased() == "d" {
 
-                    // Prints the list of books for the user to choose from, 
-                    // uses .filter to get rid of the unavailable books
+                    // Uses .reduce to create a variable for the count of available books.
+                    let bookCount: Int = books.reduce(0) { $0 + ($1.available ? 1 : 0)}
+
+                    // Makes a list using .filter of all available books.
                     let availableBooks = books.filter { book in
                         return book.available}
                     
-                    print(availableBooks)
+                    // This print statement is here to show the user what they 
+                    print(" There are \(bookCount) Available books: \(availableBooks)")
 
                     // Loops until there is a correct input.
                     while inputtingBorrower == true {
                         inputtingBorrower = false
 
-                        // Asks the user what boo they want, returns if the input is null.
+                        // Asks the user what book they want, returns if the input is null.
                         print("Which book would you like to issue? type the number in the list of the book")
                         guard let bookChoiceInput = readLine(), !bookChoiceInput.isEmpty else {
                             print("a book choice is required")
@@ -187,7 +189,8 @@ struct SwiftPlayground {
                         }
 
                         // Uses an if let statement to change the optional string into an integer.
-                        if let bookChoice = Int(bookChoiceInput) {
+                        if let bookChoiceNum = Int(bookChoiceInput) {
+                            let bookChoice = availableBooks[bookChoiceNum - 1]
                             print("The choice you entered was \(bookChoice)")
                         } else {
                             print("Invalid input, please enter a whole number")
@@ -202,6 +205,8 @@ struct SwiftPlayground {
                 continue
             }
         }
+
+        print("Thanks for using the Onslow Book Borrowing System.")
     }
 } 
 
