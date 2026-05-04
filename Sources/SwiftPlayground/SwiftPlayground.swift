@@ -15,6 +15,7 @@ struct Book: Identifiable, Hashable, Equatable, CustomStringConvertible {
     let author: String
     var description: String 
         {"| Title: \(bookTitle), Author: \(author), Available: \(available) |"}
+
 }
 
 /// This struct contains the students who will be issuing out the books.
@@ -126,35 +127,33 @@ struct SwiftPlayground {
                     var userAgeInput: String
                     var userName: String
 
-                    while inputtingBorrower{
+                    repeat {
+                        inputtingBorrower = false
                         // Asks what the new student's name is, doesn't allow it if user enters null.
                         print("What is the name of the student you're adding?")
+                        // Uses guard let to avoid a null input.
                         guard let userName = readLine(), !userName.isEmpty else {
                             print("Name is required")
+                            inputtingBorrower = true
                             return
                         }
                         
-
                         // Asks the new student's name, doesn't allow it if user enters null.
                         print("How old is the student?")
                         guard let userAgeInput = readLine(), !userAgeInput.isEmpty else {
                             print("Age is required")
+                            inputtingBorrower = true
                             return 
                         }
-                        // Asks for the student's age, this is stored as an optional string.
-                        print("How old is the student?")
-                        guard let userAgeInput = readLine(), !userAgeInput.isEmpty else {
-                            print("Age is required")
-                            return
-                        }
+
                         if let userAge = Int(userAgeInput) {
                             print("The age you entered was \(userAge)")
                             students.append(Student(id: UUID(), name: userName, age: userAge))
                         } else {
-                            print("Invalid input, please enter a whole number")
                             inputtingBorrower = true
+                            print("Invalid input")
                         }
-                    }
+                    } while inputtingBorrower
 
                     // Prints the new list of students.
                     print("The new list of students is \(students)")
@@ -169,8 +168,12 @@ struct SwiftPlayground {
                 // This part of the code runs when the user is issuing out a book.
                 if userEntry.lowercased() == "d" {
 
-                    // Prints the list of books for the user to choose from.
-                    print(books)
+                    // Prints the list of books for the user to choose from, 
+                    // uses .filter to get rid of the unavailable books
+                    let availableBooks = books.filter { book in
+                        return book.available}
+                    
+                    print(availableBooks)
 
                     // Loops until there is a correct input.
                     while inputtingBorrower == true {
