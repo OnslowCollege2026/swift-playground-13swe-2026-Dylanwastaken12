@@ -89,32 +89,36 @@ struct SwiftPlayground {
 
                 // If the user wants to add a book to the library, this part of the code will run.
                 if userEntry.lowercased() == "a" {
+                    repeat{
+                        inputtingBook = false
+                        // Creates variables which are used for user input for title and author.
+                        let userBookTitle: String = ""
+                        let userBookAuthor: String = ""
 
-                    // Creates variables which are used for user input for title and author.
-                    let userBookTitle: String = ""
-                    let userBookAuthor: String = ""
+                        // Asks user what the title is, value is returned if the input is null, their choice is then printed.
+                        print("What is the name of the book?")
+                        guard let userBookTitle = readLine(), !userBookTitle.isEmpty else {
+                            print("Book Title is required")
+                            inputtingBook = true
+                            continue 
+                        }
+                        print("Your book title is \(userBookTitle)")
 
-                    // Asks user what the title is, value is returned if the input is null, their choice is then printed.
-                    print("What is the name of the book?")
-                    guard let userBookTitle = readLine(), !userBookTitle.isEmpty else {
-                        print("Book Title is required")
-                        return 
-                    }
-                    print("Your book title is \(userBookTitle)")
+                        // Asks the user who the author of the book is, 
+                        // value is returned if input is null, their choice is then printed.
+                        print("Who is the author?")
+                        guard let userBookAuthor = readLine(), !userBookAuthor.isEmpty else {
+                            print("Book Author is required")
+                            inputtingBook = true
+                            continue
+                        }
+                        print("Your author is \(userBookAuthor)")
 
-                    // Asks the user who the author of the book is, 
-                    // value is returned if input is null, their choice is then printed.
-                    print("Who is the author?")
-                    guard let userBookAuthor = readLine(), !userBookAuthor.isEmpty else {
-                        print("Book Author is required")
-                        return
-                    }
-                    print("Your author is \(userBookAuthor)")
-
-                    // Creates a new instance of the "Book" Struct using the variables aquired from user input,
-                    // This instance is added to the list of books.
-                    books.append(Book(id: UUID(), bookTitle: userBookTitle, available: true, author: userBookAuthor))
-                    print("The new list of available books is \(books)")
+                        // Creates a new instance of the "Book" Struct using the variables aquired from user input,
+                        // This instance is added to the list of books.
+                        books.append(Book(id: UUID(), bookTitle: userBookTitle, available: true, author: userBookAuthor))
+                        print("The new list of available books is \(books)")
+                    } while inputtingBook == true
                 }
 
 
