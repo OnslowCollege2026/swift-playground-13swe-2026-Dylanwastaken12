@@ -67,11 +67,11 @@ struct SwiftPlayground {
             Student(id: UUID(), name: "Dylan", age: 17)
         ]
 
-        // Creates function used to convert optional strings, to integers.
-        func stringToInt(string: String) -> Int {
-            guard let intValue = Int(string) else {return 0}
-            return intValue
-        }
+        // Creates array to store a list of loans.
+        var loans = [
+            Loan(id: UUID(), studentID: UUID(), bookID: books[1].id, isReturned: false),
+            Loan(id: UUID(), studentID: UUID(), bookID: books[4].id, isReturned: false)
+        ]
 
         // Creates booleans to use in while loops while the user is inputting information.
         var inputtingAge: Bool = true
@@ -83,7 +83,7 @@ struct SwiftPlayground {
         // Starts while loop the code runs inside, when the user ends the program, this loop is broken.
         while codeRunning == true {
             // Prints a message to start the program.
-            print("Hello, welcome to the Onslow Book Borrowing System, how may we help you?, A: Add a book to the library? | B: Register a borrower/User? | C: End the program? | D: Issue a book to a student?" )
+            print("Hello, welcome to the Onslow Book Borrowing System, how may we help you?, A: Add a book to the library? | B: Register a borrower/User? | C: End the program? | D: Issue a book to a student from the list of students? | E: Return a Book to the library?")
             // Variable for userEntry is put in an if let where it repeats the while loop if the userEnntry is null.
             if let userEntry = readLine(), !userEntry.isEmpty {
 
@@ -170,6 +170,8 @@ struct SwiftPlayground {
 
                 // This part of the code runs when the user is issuing out a book.
                 if userEntry.lowercased() == "d" {
+                    // Resets the boolean used for the while loops in case it has been set to false.
+                    inputtingBorrower = true
 
                     // Uses .reduce to create a variable for the count of available books.
                     let bookCount: Int = books.reduce(0) { $0 + ($1.available ? 1 : 0)}
@@ -189,19 +191,44 @@ struct SwiftPlayground {
                         print("Which book would you like to issue? type the number in the list of the book")
                         guard let bookChoiceInput = readLine(), !bookChoiceInput.isEmpty else {
                             print("a book choice is required")
-                            return
+                            inputtingBorrower = true
+                            continue
                         }
 
-                        // Uses an if let statement to change the optional string into an integer.
-                        if let bookChoiceNum = Int(bookChoiceInput) {
+                        // Prints a list of students for the user.
+                        print(students)
+
+                        // Asks user which student they are issuing as, returns if input is null.
+                        print("Which student would you like to issue the book to? type the number in the list of the student.")
+                        guard let studentChoiceInput = readLine(), !studentChoiceInput.isEmpty else {
+                            print("a student choice is required")
+                            inputtingBorrower = true
+                            continue
+                        }
+
+                        // Uses an if let statement to check if both optional statements can be converted into integers.
+                        if let bookChoiceNum = Int(bookChoiceInput), let studentChoiceNum = Int(studentChoiceInput) {
+
+                            // Makes a new variable containing the user's chosen book.
                             let bookChoice = availableBooks[bookChoiceNum - 1]
                             print("The choice you entered was \(bookChoice)")
+
+                            // Makes a new variable containing the user's chosen student.
+                            let studentChoice = students[studentChoiceNum - 1]
+                            print("The student you entered was \(studentChoice)")
+
+                            // Adds both new variables into a new intance of the "Loan" struct, 
+                            // this is then added to the loans list.
+                            loans.append(Loan(id: UUID(), studentID: studentChoice.id, bookID: bookChoice.id, isReturned: false))
                         } else {
-                            print("Invalid input, please enter a whole number")
+
+                            // If the user's input for any of the questions is invalid, the while loops restarts.
+                            print("Invalid input")
                             inputtingBorrower = true
                         }
+                        // Prints the list of loans after the user's loan has been added.
+                        print("The list of loans now looks like: \(loans)")
                     }
-                    
                 }
                 // This else is for the while loop for the initial userEntry.
             } else {
@@ -210,9 +237,7 @@ struct SwiftPlayground {
             }
         }
 
+        // End of program message.
         print("Thanks for using the Onslow Book Borrowing System.")
     }
 } 
-
-
-
