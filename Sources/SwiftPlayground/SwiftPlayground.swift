@@ -34,12 +34,15 @@ struct Student: CustomStringConvertible, Identifiable, Hashable {
 ///     id: The id of the request for a student to issue a book.
 ///     studentID: the id of the student issuing the book.
 ///     bookID: the id of the book they are issuing.
+///     isReturned: a true or false as to whether the book has been returned to the library yet
+///     bookTitle: the title of the issued book.
 struct Loan: Hashable, CustomStringConvertible, Identifiable, Equatable {
     let id: UUID
     let studentID: UUID
     let bookID: UUID
     let isReturned: Bool
-    var description: String {"Studentid:  \(studentID) Bookid:  \(bookID) Returned: \(isReturned)"}
+    let bookTitle: String
+    var description: String {"Book Title: \(bookTitle) Studentid:  \(studentID) Bookid:  \(bookID) Returned: \(isReturned)"}
     }
 
 
@@ -70,8 +73,8 @@ struct SwiftPlayground {
 
         // Creates array to store a list of loans.
         var loans = [
-            Loan(id: UUID(), studentID: UUID(), bookID: books[1].id, isReturned: false),
-            Loan(id: UUID(), studentID: UUID(), bookID: books[4].id, isReturned: false)
+            Loan(id: UUID(), studentID: UUID(), bookID: books[1].id, isReturned: false, bookTitle: books[1].bookTitle),
+            Loan(id: UUID(), studentID: UUID(), bookID: books[4].id, isReturned: false, bookTitle: books[4].bookTitle)
         ]
 
         // Creates booleans to use in while loops while the user is inputting information.
@@ -100,7 +103,7 @@ struct SwiftPlayground {
                         // Asks user what the title is, value is returned if the input is null, their choice is then printed.
                         print("What is the name of the book?")
                         guard let userBookTitle = readLine(), !userBookTitle.isEmpty, userBookTitle.count < 30 else {
-                            print("Book Title is required")
+                            print("Book Title is required, or is too long.")
                             inputtingBook = true
                             continue 
                         }
@@ -110,7 +113,7 @@ struct SwiftPlayground {
                         // value is returned if input is null, their choice is then printed.
                         print("Who is the author?")
                         guard let userBookAuthor = readLine(), !userBookAuthor.isEmpty, userBookAuthor.count < 15 else {
-                            print("Book Author is required")
+                            print("Book Author is required, or is too long")
                             inputtingBook = true
                             continue
                         }
@@ -222,7 +225,7 @@ struct SwiftPlayground {
 
                             // Adds both new variables into a new intance of the "Loan" struct, 
                             // this is then added to the loans list.
-                            loans.append(Loan(id: UUID(), studentID: studentChoice.id, bookID: bookChoice.id, isReturned: false))
+                            loans.append(Loan(id: UUID(), studentID: studentChoice.id, bookID: bookChoice.id, isReturned: false, bookTitle: bookChoice.bookTitle))
                         } else {
 
                             // If the user's input for any of the questions is invalid, the while loops restarts.
@@ -234,13 +237,18 @@ struct SwiftPlayground {
                     }
                 }
 
+                // This is for handling returns of books, and deleating them from the "loans" array.
                 if userEntry.lowercased() == "e" {
                     inputtingReturn = true
 
+                    // Prints current list of active loans for the user to look at.
                     print("The current list of loans is: \(loans)")
 
+                    // Starts a while loop that is restarted should any errors occur.
                     while inputtingReturn == true {
                         inputtingReturn = false
+
+                        // Asks what loaned book the user would like to return, guard let handles null inputs.
                         print("Which issued book would you like to return? type the number in the list of loaned book.")
                         guard let loanChoiceInput = readLine(), !loanChoiceInput.isEmpty else {
                             print("A choice of loan is required")
@@ -248,10 +256,16 @@ struct SwiftPlayground {
                             continue
                         }
 
+                        // Converts the optional string to an integer to remove the loan at a given point in the array.
+                        // Errors and handled using an if let statement.
                         if let loanChoiceNum = Int(loanChoiceInput) {
                             let loanChoice = loans[loanChoiceNum - 1 ]
                             print("The loan you chose was \(loanChoice)")
                             loans.remove(at: loanChoiceNum - 1)
+                        } else {
+                            print("Invalid input")
+                            inputtingReturn = true
+                            continue
                         }
                     }
 
