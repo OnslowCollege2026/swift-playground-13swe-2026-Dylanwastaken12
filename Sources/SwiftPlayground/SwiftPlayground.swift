@@ -64,7 +64,8 @@ struct SwiftPlayground {
 
         // Creates a list of students.
         var students = [
-            Student(id: UUID(), name: "Dylan", age: 17)
+            Student(id: UUID(), name: "Dylan", age: 17),
+            Student(id: UUID(), name: "Alex", age: 15)
         ]
 
         // Creates array to store a list of loans.
@@ -78,6 +79,7 @@ struct SwiftPlayground {
         var inputtingBorrower: Bool = true
         var codeRunning: Bool = true
         var inputtingBook: Bool = true
+        var inputtingReturn: Bool = true
 
         
         // Starts while loop the code runs inside, when the user ends the program, this loop is broken.
@@ -230,6 +232,29 @@ struct SwiftPlayground {
                         // Prints the list of loans after the user's loan has been added.
                         print("The list of loans now looks like: \(loans)")
                     }
+                }
+
+                if userEntry.lowercased() == "e" {
+                    inputtingReturn = true
+
+                    print("The current list of loans is: \(loans)")
+
+                    while inputtingReturn == true {
+                        inputtingReturn = false
+                        print("Which issued book would you like to return? type the number in the list of loaned book.")
+                        guard let loanChoiceInput = readLine(), !loanChoiceInput.isEmpty else {
+                            print("A choice of loan is required")
+                            inputtingReturn = true
+                            continue
+                        }
+
+                        if let loanChoiceNum = Int(loanChoiceInput) {
+                            let loanChoice = loans[loanChoiceNum - 1 ]
+                            print("The loan you chose was \(loanChoice)")
+                            loans.remove(at: loanChoiceNum - 1)
+                        }
+                    }
+
                 }
                 // This else is for the while loop for the initial userEntry.
             } else {
