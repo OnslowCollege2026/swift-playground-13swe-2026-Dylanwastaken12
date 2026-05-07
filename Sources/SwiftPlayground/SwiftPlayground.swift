@@ -85,7 +85,7 @@ struct SwiftPlayground {
             // Prints a message to start the program.
             print("Hello, welcome to the Onslow Book Borrowing System, how may we help you?, A: Add a book to the library? | B: Register a borrower/User? | C: End the program? | D: Issue a book to a student from the list of students? | E: Return a Book to the library?")
             // Variable for userEntry is put in an if let where it repeats the while loop if the userEnntry is null.
-            if let userEntry = readLine(), !userEntry.isEmpty {
+            if let userEntry = readLine(), !userEntry.isEmpty, userEntry.count <= 1 {
 
                 // If the user wants to add a book to the library, this part of the code will run.
                 if userEntry.lowercased() == "a" {
@@ -97,7 +97,7 @@ struct SwiftPlayground {
 
                         // Asks user what the title is, value is returned if the input is null, their choice is then printed.
                         print("What is the name of the book?")
-                        guard let userBookTitle = readLine(), !userBookTitle.isEmpty else {
+                        guard let userBookTitle = readLine(), !userBookTitle.isEmpty, userBookTitle.count < 30 else {
                             print("Book Title is required")
                             inputtingBook = true
                             continue 
@@ -107,7 +107,7 @@ struct SwiftPlayground {
                         // Asks the user who the author of the book is, 
                         // value is returned if input is null, their choice is then printed.
                         print("Who is the author?")
-                        guard let userBookAuthor = readLine(), !userBookAuthor.isEmpty else {
+                        guard let userBookAuthor = readLine(), !userBookAuthor.isEmpty, userBookAuthor.count < 15 else {
                             print("Book Author is required")
                             inputtingBook = true
                             continue
@@ -136,8 +136,8 @@ struct SwiftPlayground {
                         // Asks what the new student's name is, doesn't allow it if user enters null.
                         print("What is the name of the student you're adding?")
                         // Uses guard let to avoid a null input.
-                        guard let userName = readLine(), !userName.isEmpty else {
-                            print("Name is required")
+                        guard let userName = readLine(), !userName.isEmpty, userName.count < 15 else {
+                            print("Name is required, or is too long")
                             inputtingBorrower = true
                             continue
                         }
@@ -149,12 +149,13 @@ struct SwiftPlayground {
                             inputtingBorrower = true
                             continue 
                         }
-                        if let userAge = Int(userAgeInput) {
+                        if let userAge = Int(userAgeInput), userAge <= 0 {
                             print("The age you entered was \(userAge)")
                             students.append(Student(id: UUID(), name: userName, age: userAge))
                         } else {
                             inputtingBorrower = true
                             print("Invalid input")
+                            continue
                         }
                     } while inputtingBorrower
 
