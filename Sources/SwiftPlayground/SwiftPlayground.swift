@@ -83,12 +83,21 @@ struct SwiftPlayground {
         var codeRunning: Bool = true
         var inputtingBook: Bool = true
         var inputtingReturn: Bool = true
+        var inputtingSearch: Bool = true
 
         
         // Starts while loop the code runs inside, when the user ends the program, this loop is broken.
         while codeRunning == true {
             // Prints a message to start the program.
-            print("Hello, welcome to the Onslow Book Borrowing System, how may we help you?, A: Add a book to the library? | B: Register a borrower/User? | C: End the program? | D: Issue a book to a student from the list of students? | E: Return a Book to the library?")
+            print("""
+            Hello, welcome to the Onslow Book Borrowing System, how may we help you, 
+            | A: Add a book to the library
+            | B: Register a borrower/User
+            | C: End the program
+            | D: Issue a book to a student from the list of students
+            | E: Return a Book to the library
+            | F: Search for a student
+            """)
             // Variable for userEntry is put in an if let where it repeats the while loop if the userEnntry is null.
             if let userEntry = readLine(), !userEntry.isEmpty, userEntry.count <= 1 {
 
@@ -179,7 +188,7 @@ struct SwiftPlayground {
                     // Resets the boolean used for the while loops in case it has been set to false.
                     inputtingBorrower = true
 
-                    // Uses .reduce to create a variable for the count of available books.
+                    // Counts how many available books there are.
                     let bookCount: Int = books.reduce(0) { $0 + ($1.available ? 1 : 0)}
 
                     // Makes a list using .filter of all available books.
@@ -225,7 +234,8 @@ struct SwiftPlayground {
 
                             // Adds both new variables into a new intance of the "Loan" struct, 
                             // this is then added to the loans list.
-                            loans.append(Loan(id: UUID(), studentID: studentChoice.id, bookID: bookChoice.id, isReturned: false, bookTitle: bookChoice.bookTitle))
+                            loans.append(Loan(id: UUID(), studentID: studentChoice.id, bookID: bookChoice.id, 
+                                isReturned: false, bookTitle: bookChoice.bookTitle))
                         } else {
 
                             // If the user's input for any of the questions is invalid, the while loops restarts.
@@ -268,7 +278,36 @@ struct SwiftPlayground {
                             continue
                         }
                     }
+                }
 
+                // Handles user search for specific student names.
+                if userEntry.lowercased() == "f" {
+                    inputtingSearch = true
+
+                    // Creates a while loop to repeat if there are errors in the user entry
+                    while inputtingSearch == true {
+                        inputtingSearch = false
+                        print("The list of students is: \(students)")
+                        print("type the name of the student you would like to find, (Case sensitive)")
+
+                        // Creates a variable holding the user input for their search.
+                        guard let userSearch = readLine(), !userSearch.isEmpty else {
+                            print("invalid input")
+                            inputtingSearch = true
+                            continue
+                        }
+
+                        // Filters the list of students for anyone with that name
+                        let userStudentSearch = students.filter { student in
+                            return student.name == userSearch}
+
+                        // Prints the searched for student is a student matches the given name.
+                        if !userStudentSearch.isEmpty {
+                            print("There is a user matching that name: \(userStudentSearch)")
+                        } else {
+                            print("There are no students matching that name")
+                        }
+                    }
                 }
                 // This else is for the while loop for the initial userEntry.
             } else {
