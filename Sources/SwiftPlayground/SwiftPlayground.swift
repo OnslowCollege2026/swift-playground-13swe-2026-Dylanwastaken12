@@ -97,6 +97,7 @@ struct SwiftPlayground {
             | D: Issue a book to a student from the list of students
             | E: Return a Book to the library
             | F: Search for a student
+            | G: Search for a book
             """)
             // Variable for userEntry is put in an if let where it repeats the while loop if the userEnntry is null.
             if let userEntry = readLine(), !userEntry.isEmpty, userEntry.count <= 1 {
@@ -306,6 +307,38 @@ struct SwiftPlayground {
                             print("There is a user matching that name: \(userStudentSearch)")
                         } else {
                             print("There are no students matching that name")
+                        }
+                    }
+                }
+
+
+
+                // Handles user search for specific books.
+                if userEntry.lowercased() == "g" {
+                    inputtingSearch = true
+
+                    // Creates a while loop to repeat if there are errors in the user entry
+                    while inputtingSearch == true {
+                        inputtingSearch = false
+                        print("The list of books is \(books)")
+                        print("type the name of the book you would like to find, (Case sensitive)")
+
+                        // Creates a variable holding the user input for their search.
+                        guard let userBookSearchInput = readLine(), !userBookSearchInput.isEmpty else {
+                            print("invalid input")
+                            inputtingSearch = true
+                            continue
+                        }
+
+                        // Filters the list of books for any with that name.
+                        let userBookSearch = books.filter { book in
+                            return book.bookTitle == userBookSearchInput}
+
+                        // Prints if there is a book matching the one searched.
+                        if !userBookSearch.isEmpty {
+                            print("There is a book matching that name: \(userBookSearch)")
+                        } else {
+                            print("There are no books matching that name")
                         }
                     }
                 }
