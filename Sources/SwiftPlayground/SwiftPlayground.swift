@@ -101,7 +101,7 @@ struct Location: Identifiable, Codable, FetchableRecord, PersistableRecord {
 
 struct Passenger: Codable, FetchableRecord, PersistableRecord {
 
-    let customerID: UUID
+    let flightID: UUID
 
     let seatNumber: UUID
 
@@ -110,7 +110,7 @@ struct Passenger: Codable, FetchableRecord, PersistableRecord {
     let bookingID: UUID
 
     enum CodingKeys: String, CodingKey {
-        case customerID = "CustomerID"
+        case flightID = "FlightID"
         case seatNumber = "Seat Number"
         case isMinor = "is Minor"
         case bookingID = "BookingID"
