@@ -5,7 +5,7 @@ import GRDB
 
 struct Customer: Identifiable, Codable, FetchableRecord, PersistableRecord {
 
-    let id: UUID
+    let id: Int
 
     var givenName: String
     var familyName: String
@@ -15,7 +15,7 @@ struct Customer: Identifiable, Codable, FetchableRecord, PersistableRecord {
     var mobilePhone: String
     var email: String
 
-    var adress: String
+    var address: String
     var region: String
     var city: String
     var country: String
@@ -28,7 +28,7 @@ struct Customer: Identifiable, Codable, FetchableRecord, PersistableRecord {
         case workPhone = "Work Phone"
         case mobilePhone = "Mobile Phone"
         case email = "Email"
-        case adress = "Adress"
+        case address = "Address"
         case region = "Region"
         case city = "City"
         case country = "Country"
@@ -37,7 +37,7 @@ struct Customer: Identifiable, Codable, FetchableRecord, PersistableRecord {
 
 struct Staff: Identifiable, Codable, FetchableRecord, PersistableRecord {
 
-    let id: UUID
+    let id: Int
 
     var givenName: String
     var familyName: String
@@ -48,7 +48,7 @@ struct Staff: Identifiable, Codable, FetchableRecord, PersistableRecord {
 
     var jobTitle: String
 
-    var airportCode: UUID
+    var airportCode: Int
 
     enum CodingKeys: String, CodingKey {
         case id = "StaffID"
@@ -64,11 +64,11 @@ struct Staff: Identifiable, Codable, FetchableRecord, PersistableRecord {
 
 struct Booking: Identifiable, Codable, FetchableRecord, PersistableRecord {
 
-    let id: UUID
+    let id: Int
 
-    var customerID: UUID
+    var customerID: Int
 
-    var staffID: UUID
+    var staffID: Int
 
     let passengerCount: Int
 
@@ -82,7 +82,7 @@ struct Booking: Identifiable, Codable, FetchableRecord, PersistableRecord {
 
 struct Location: Identifiable, Codable, FetchableRecord, PersistableRecord {
 
-    let id: UUID
+    let id: Int
 
     let airportCode: Int
 
@@ -101,13 +101,13 @@ struct Location: Identifiable, Codable, FetchableRecord, PersistableRecord {
 
 struct Passenger: Codable, FetchableRecord, PersistableRecord {
 
-    let flightID: UUID
+    let flightID: Int
 
-    let seatNumber: UUID
+    let seatNumber: Int
 
     let isMinor: Bool
 
-    let bookingID: UUID
+    let bookingID: Int
 
     enum CodingKeys: String, CodingKey {
         case flightID = "FlightID"
@@ -119,11 +119,11 @@ struct Passenger: Codable, FetchableRecord, PersistableRecord {
 
 struct Flight: Codable, FetchableRecord, PersistableRecord {
 
-    let flightID: UUID
+    let flightID: Int
 
     var departureTime: String
 
-    let planeID: UUID
+    let planeID: Int
 
     let departureLocation: String
 
@@ -140,7 +140,7 @@ struct Flight: Codable, FetchableRecord, PersistableRecord {
 
 struct Plane: Codable, FetchableRecord, PersistableRecord {
 
-    let planeID: UUID
+    let planeID: Int
 
     let model: String
 
@@ -161,9 +161,9 @@ struct Plane: Codable, FetchableRecord, PersistableRecord {
 
 struct Seat: Codable, FetchableRecord, PersistableRecord {
 
-    let seatID: UUID
+    let seatID: Int
 
-    let planeID: UUID
+    let planeID: Int
 
     let seatClass: String
 
@@ -179,7 +179,7 @@ struct Seat: Codable, FetchableRecord, PersistableRecord {
 
 struct Runway: Codable, FetchableRecord, PersistableRecord {
 
-    let runwayID: UUID
+    let runwayID: Int
     
     let length: Int
 
@@ -195,20 +195,52 @@ struct Runway: Codable, FetchableRecord, PersistableRecord {
     }
 }
 
+func insertValue<T: PersistableRecord>(into dbQueue: DatabaseQueue, _ value: T) {
+    do {
+        try dbQueue.write { db in
+            try value.insert(db)
+        }
+    } catch let error {
+        print("Error inserting into the database: \(error)")
+    }
+}
 
 @main
 struct SwiftPlayground {
     static func main() {
-        let dbPath = "Sources/SwiftPlayground/Flight-Booking.db"
+
+        var tables = [
+            "1: Locations",
+            "2: Plane",
+            "3: Customers",
+            "4: Runways",
+            "5: Seats",
+            "6: Flights",
+            "7: Staff",
+            "8: Bookings",
+            "9: Passengers",
+        ]
+
+        let dbPath = "Sources/SwiftPlayground/Flight-Booking.sqlite"
+
+        var dbQueue: DatabaseQueue?
         do {
-            let dbQueue = try DatabaseQueue(path: dbPath)
+            dbQueue = try DatabaseQueue(path: dbPath)
             print("database connection succesful")
 
-            try? dbQueue.read { db in
-                try db.dumpSchema()
-            }
         } catch {
             print(error)
+        }
+
+        guard let dbQueue else {exit(1)}
+
+        print(tables)
+        print("What table would you like to enter data into.")
+
+        var userChoice = readLine()
+
+        switch userChoice {
+            case "1": dbQueue.
         }
     }
 }
@@ -218,15 +250,10 @@ struct SwiftPlayground {
 Locations
 Plane
 Customers
-
 Runways
 Seats
 Flights
-
 Staff
 Bookings
 Passengers
-
-
-
 */
