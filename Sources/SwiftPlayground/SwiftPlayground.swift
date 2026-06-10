@@ -205,10 +205,32 @@ func insertValue<T: PersistableRecord>(into dbQueue: DatabaseQueue, _ value: T) 
     }
 }
 
+
 @main
 struct SwiftPlayground {
     static func main() {
+        let dbPath = "Sources/SwiftPlayground/Flight-Booking.sqlite"
 
+        var dbQueue: DatabaseQueue
+        do {
+            dbQueue = try DatabaseQueue(path: dbPath)
+            print("database connection succesful")
+
+        } catch {
+            print(error)
+        }
+
+        try dbQueue.read { db in
+            let customer = try Customer
+            .filter(Customer.CodingKeys.givenName == "Mei")
+            .fetchOne(db)}
+
+
+
+
+
+
+        /*
         var tables = [
             "1: Locations",
             "2: Plane",
@@ -241,9 +263,11 @@ struct SwiftPlayground {
 
         switch userChoice {
             case "1": dbQueue.
+        */
+        
         }
     }
-}
+
 
 
 /*
