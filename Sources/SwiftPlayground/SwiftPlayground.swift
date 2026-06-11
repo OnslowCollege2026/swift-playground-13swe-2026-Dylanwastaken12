@@ -287,7 +287,7 @@ struct SwiftPlayground {
 
         try dbQueue.read { db in
             let customer = try Customer
-            .filter(Customer.CodingKeys.givenName == "Mei".databaseValue)
+            .filter(Customer.Columns.givenName == "Mei".databaseValue)
             .fetchOne(db)}
 
 
