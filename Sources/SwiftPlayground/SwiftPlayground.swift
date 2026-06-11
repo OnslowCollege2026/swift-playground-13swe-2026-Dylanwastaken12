@@ -286,9 +286,16 @@ struct SwiftPlayground {
         }
 
         try dbQueue.read { db in
-            let customer = try Customer
+            let customerSearch = try Customer
             .filter(Customer.Columns.givenName == "Mei".databaseValue)
-            .fetchOne(db)}
+            .fetchOne(db)
+            
+            if let customerSearch {
+                    print("Found by name: \(customerSearch)")
+                } else {
+                    print("No match for name Matua Doc")
+                }
+        }
 
 
 
