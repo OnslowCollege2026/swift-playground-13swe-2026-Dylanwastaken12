@@ -283,18 +283,23 @@ struct SwiftPlayground {
 
         } catch {
             print(error)
+            exit(1)
         }
 
-        try dbQueue.read { db in
-            let customerSearch = try Customer
-            .filter(Customer.Columns.givenName == "Mei".databaseValue)
-            .fetchOne(db)
-            
-            if let customerSearch {
-                    print("Found by name: \(customerSearch)")
-                } else {
-                    print("No match for name Matua Doc")
-                }
+        do {
+            try dbQueue.read { db in
+                let customerSearch = try Customer
+                .filter(Customer.Columns.givenName == "John")
+                .fetchOne(db)
+                
+                if let customerSearch {
+                        print("Found by name: \(customerSearch)")
+                    } else {
+                        print("No match for given name")
+                    }
+            } 
+        } catch {
+            print("Database error: \(error)")
         }
 
 
