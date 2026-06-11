@@ -33,8 +33,20 @@ struct Customer: Identifiable, Codable, FetchableRecord, PersistableRecord {
         case city = "City"
         case country = "Country"
     }
+    enum Columns {
+        static let id = Column(CodingKeys.id)
+        static let givenName = Column(CodingKeys.givenName)
+        static let familyName = Column(CodingKeys.familyName)
+        static let homePhone = Column(CodingKeys.homePhone)
+        static let workPhone = Column(CodingKeys.workPhone)
+        static let mobilePhone = Column(CodingKeys.mobilePhone)
+        static let email = Column(CodingKeys.email)
+        static let address = Column(CodingKeys.address)
+        static let region = Column(CodingKeys.region)
+        static let city = Column(CodingKeys.city)
+        static let country = Column(CodingKeys.country)
+    }
 }
-
 struct Staff: Identifiable, Codable, FetchableRecord, PersistableRecord {
 
     let id: Int
@@ -60,6 +72,16 @@ struct Staff: Identifiable, Codable, FetchableRecord, PersistableRecord {
         case jobTitle = "Job Title"
         case airportCode = "AirportCode"
     }
+    enum Columns {
+        static let id = Column(CodingKeys.id)
+        static let givenName = Column(CodingKeys.givenName)
+        static let familyName = Column(CodingKeys.familyName)
+        static let workPhone = Column(CodingKeys.workPhone)
+        static let mobilePhone = Column(CodingKeys.mobilePhone)
+        static let workEmail = Column(CodingKeys.workEmail)
+        static let jobTitle = Column(CodingKeys.jobTitle)
+        static let airportCode = Column(CodingKeys.airportCode)
+    }
 }
 
 struct Booking: Identifiable, Codable, FetchableRecord, PersistableRecord {
@@ -78,6 +100,12 @@ struct Booking: Identifiable, Codable, FetchableRecord, PersistableRecord {
         case staffID = "StaffID"
         case passengerCount = "Passenger Count"
     }
+    enum Columns {
+        static let id = Column(CodingKeys.id)
+        static let customerID = Column(CodingKeys.customerID)
+        static let staffID = Column(CodingKeys.staffID)
+        static let passengerCount = Column(CodingKeys.passengerCount)
+    }
 }
 
 struct Location: Identifiable, Codable, FetchableRecord, PersistableRecord {
@@ -95,7 +123,12 @@ struct Location: Identifiable, Codable, FetchableRecord, PersistableRecord {
         case airportCode = "AirportCode"
         case airportName = "Airport Name"
         case airportAdress = "Airport Adress"
-
+    }
+    enum Columns {
+        static let id = Column(CodingKeys.id)
+        static let airportCode = Column(CodingKeys.airportCode)
+        static let airportName = Column(CodingKeys.airportName)
+        static let airportAdress = Column(CodingKeys.airportAdress)
     }
 }
 
@@ -114,6 +147,12 @@ struct Passenger: Codable, FetchableRecord, PersistableRecord {
         case seatNumber = "Seat Number"
         case isMinor = "is Minor"
         case bookingID = "BookingID"
+    }
+    enum Columns {
+        static let flightID = Column(CodingKeys.flightID)
+        static let seatNumber = Column(CodingKeys.seatNumber)
+        static let isMinor = Column(CodingKeys.isMinor)
+        static let bookingID = Column(CodingKeys.bookingID)
     }
 }
 
@@ -136,6 +175,13 @@ struct Flight: Codable, FetchableRecord, PersistableRecord {
         case departureLocation = "Departure Location"
         case destinationLocation = "Destination Location"
     }
+    enum Columns {
+        static let flightID = Column(CodingKeys.flightID)
+        static let departureTime = Column(CodingKeys.departureTime)
+        static let planeID = Column(CodingKeys.planeID)
+        static let departureLocation = Column(CodingKeys.departureLocation)
+        static let destinationLocation = Column(CodingKeys.destinationLocation)
+    }
 }
 
 struct Plane: Codable, FetchableRecord, PersistableRecord {
@@ -157,6 +203,13 @@ struct Plane: Codable, FetchableRecord, PersistableRecord {
         case maxWeight = "Max Weight"
         case capacity = "Capacity"
     }
+    enum Columns {
+        static let planeID = Column(CodingKeys.planeID)
+        static let model = Column(CodingKeys.model)
+        static let minRunwayLength = Column(CodingKeys.minRunwayLength)
+        static let maxWeight = Column(CodingKeys.maxWeight)
+        static let capacity = Column(CodingKeys.capacity)
+    }
 }
 
 struct Seat: Codable, FetchableRecord, PersistableRecord {
@@ -175,6 +228,12 @@ struct Seat: Codable, FetchableRecord, PersistableRecord {
         case seatClass = "Seat Class"
         case emergency = "Emergency"
     }
+    enum Columns {
+        static let seatID = Column(CodingKeys.seatID)
+        static let planeID = Column(CodingKeys.planeID)
+        static let seatClass = Column(CodingKeys.seatClass)
+        static let emergency = Column(CodingKeys.emergency)
+    }
 }
 
 struct Runway: Codable, FetchableRecord, PersistableRecord {
@@ -192,6 +251,12 @@ struct Runway: Codable, FetchableRecord, PersistableRecord {
         case length = "Length"
         case airportCode = "AirportCode"
         case type = "Type"
+    }
+    enum Columns {
+        static let runwayID = Column(CodingKeys.runwayID)
+        static let length = Column(CodingKeys.length)
+        static let airportCode = Column(CodingKeys.airportCode)
+        static let type = Column(CodingKeys.type)
     }
 }
 
@@ -222,7 +287,7 @@ struct SwiftPlayground {
 
         try dbQueue.read { db in
             let customer = try Customer
-            .filter(Customer.CodingKeys.givenName == "Mei")
+            .filter(Customer.CodingKeys.givenName == "Mei".databaseValue)
             .fetchOne(db)}
 
 
