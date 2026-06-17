@@ -71,6 +71,10 @@ struct Borrower: Identifiable, Codable, FetchableRecord, PersistableRecord {
         static let id = Column(CodingKeys.id)
         static let givenName = Column(CodingKeys.givenName)
         static let familyName = Column(CodingKeys.familyName)
+        static let email = Column(CodingKeys.email)
+        static let borrowerType = Column(CodingKeys.borrowerType)
+        static let yearLevel = Column(CodingKeys.yearLevel)
+        static let loanID = Column(CodingKeys.loanID)
     }
 }
 
@@ -86,6 +90,13 @@ struct Loans: Identifiable, Codable, FetchableRecord, PersistableRecord {
         case dateOfIssue = "Date of Issue"
         case dateOfReturn = "Date of Return"
         case dueDate = "Due Date"
+    }
+
+    enum Columns {
+        static let id = Column(CodingKeys.id)
+        static let dateOfIssue = Column(CodingKeys.dateOfIssue)
+        static let dateOfReturn = Column(CodingKeys.dateOfReturn)
+        static let dueDate = Column(CodingKeys.dueDate)
     }
 }
 
@@ -104,11 +115,29 @@ struct Items: Identifiable, Codable, FetchableRecord, PersistableRecord {
         case itemCondition = "Item Condition"
         case loanID = "LoanID"
     }
+
+    enum Columns {
+        static let id = Column(CodingKeys.id)
+        static let itemName = Column(CodingKeys.itemName)
+        static let itemType = Column(CodingKeys.itemType)
+        static let itemCondition = Column(CodingKeys.itemCondition)
+        static let loanID = Column(CodingKeys.loanID)
+    }
 }
 
 @main
 struct SwiftPlayground {
     static func main() {
-        print("Hello, world!")
+        let dbPath = "Sources/SwiftPlayground/Japanese-Item-tracking.db"
+
+        var dbQueue: DatabaseQueue
+        do {
+            dbQueue = try DatabaseQueue(path: dbPath)
+            print("database connection succesful")
+
+        } catch {
+            print(error)
+            exit(1)
+        }
     }
 }
