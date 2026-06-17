@@ -1,6 +1,5 @@
 import Foundation
 import GRDB
-
 struct Borrower: Identifiable, Codable, FetchableRecord, PersistableRecord {
 
     let id: Int
