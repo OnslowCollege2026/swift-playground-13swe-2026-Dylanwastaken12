@@ -49,21 +49,61 @@ struct Customer: Identifiable, Codable, FetchableRecord, PersistableRecord {
 
 struct Borrower: Identifiable, Codable, FetchableRecord, PersistableRecord {
 
-    let borrowerID: Int
+    let id: Int
     var givenName: String
     var familyName: String
     var email: String
-    var BorrowerType: String
+    var borrowerType: String
     var yearLevel: Int
     var loanID: Int
+
+    enum CodingKeys: String, CodingKey {
+        case id = "BorrowerID"
+        case givenName = "Given Name"
+        case familyName = "Family Name"
+        case email = "Email"
+        case borrowerType = "Borrower Type"
+        case yearLevel = "Year Level"
+        case loanID = "LoanID"
+    }
+
+    enum Columns {
+        static let id = Column(CodingKeys.id)
+        static let givenName = Column(CodingKeys.givenName)
+        static let familyName = Column(CodingKeys.familyName)
+    }
 }
 
 struct Loans: Identifiable, Codable, FetchableRecord, PersistableRecord {
 
-    let loanID: Int
+    let id: Int
     var dateOfIssue: String
     var dateOfReturn: String
     var dueDate: String
+
+    enum CodingKeys: String, CodingKey {
+        case id = "LoanID"
+        case dateOfIssue = "Date of Issue"
+        case dateOfReturn = "Date of Return"
+        case dueDate = "Due Date"
+    }
+}
+
+struct Items: Identifiable, Codable, FetchableRecord, PersistableRecord {
+
+    let id: Int
+    var itemName: String
+    var itemType: String
+    var itemCondition: String
+    var loanID: Int
+
+    enum CodingKeys: String, CodingKey {
+        case id = "ItemID"
+        case itemName = "Item Name"
+        case itemType = "Item Type"
+        case itemCondition = "Item Condition"
+        case loanID = "LoanID"
+    }
 }
 
 @main
