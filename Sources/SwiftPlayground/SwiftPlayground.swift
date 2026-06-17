@@ -1,6 +1,5 @@
 import Foundation
 import GRDB
-import GRDBSQLite
 
 struct Borrower: Identifiable, Codable, FetchableRecord, PersistableRecord {
 
