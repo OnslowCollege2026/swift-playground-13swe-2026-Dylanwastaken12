@@ -93,14 +93,14 @@ struct SwiftPlayground {
             .filter(Borrower.Columns.givenName == "Liam")
             .fetchOne}
 
-/*
+
         if let userBorrower {
             print("Found Borrower: \(userBorrower)")
         } else {
             print("No match for the given name")
         }
 
-
+/*
         try dbQueue.read { db in
             let seniorBorrowers = try Borrower
                 .filter(Borrower.Columns.yearLevel >= 12)
