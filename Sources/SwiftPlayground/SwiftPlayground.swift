@@ -88,6 +88,37 @@ struct SwiftPlayground {
             dbQueue = try DatabaseQueue(path: dbPath)
             print("database connection succesful")
 
+        try dbQueue.read { db in
+        let userBorrower = try Borrower
+            .filter(Borrower.Columns.givenName == "Liam")
+            .fetchOne}
+
+/*
+        if let userBorrower {
+            print("Found Borrower: \(userBorrower)")
+        } else {
+            print("No match for the given name")
+        }
+
+
+        try dbQueue.read { db in
+            let seniorBorrowers = try Borrower
+                .filter(Borrower.Columns.yearLevel >= 12)
+                .order(Borrower.Columns.givenName)
+                .fetchAll(db)}
+
+            print(seniorBorrowers)
+
+        try dbQueue.read { db in
+            let studentBorrowers = try Borrower
+            .filter(
+                Borrower.Columns.borrowerType == "Student"
+            )
+            .fetchOne(db)
+            
+        print(studentBorrowers as Any)
+        } 
+*/
         } catch {
             print(error)
             exit(1)
