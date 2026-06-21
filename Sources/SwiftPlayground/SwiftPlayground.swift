@@ -1,6 +1,6 @@
 import Foundation
 import GRDB
-struct Borrower: Identifiable, Codable, FetchableRecord, PersistableRecord {
+struct Borrowers: Identifiable, Codable, FetchableRecord, PersistableRecord {
 
     let id: Int
     var givenName: String
@@ -89,36 +89,37 @@ struct SwiftPlayground {
             print("database connection succesful")
 
         try dbQueue.read { db in
-        let userBorrower = try Borrower
-            .filter(Borrower.Columns.givenName == "Liam")
-            .fetchOne}
+        let userBorrower = try Borrowers
+            .filter(Borrowers.Columns.givenName == "Liam")
+            .fetchOne(db)
 
-
-        if let userBorrower {
-            print("Found Borrower: \(userBorrower)")
-        } else {
-            print("No match for the given name")
+            if let userBorrower {
+                print("Found Borrower: \(userBorrower)")
+            } else {
+                print("No match for the given name")
+            }
         }
 
-/*
         try dbQueue.read { db in
-            let seniorBorrowers = try Borrower
-                .filter(Borrower.Columns.yearLevel >= 12)
-                .order(Borrower.Columns.givenName)
-                .fetchAll(db)}
-
+            let seniorBorrowers = try Borrowers
+                .filter(Borrowers.Columns.yearLevel >= 12)
+                .order(Borrowers.Columns.givenName)
+                .fetchAll(db)
+            
             print(seniorBorrowers)
+        }
+
 
         try dbQueue.read { db in
-            let studentBorrowers = try Borrower
+            let studentBorrowers = try Borrowers
             .filter(
-                Borrower.Columns.borrowerType == "Student"
+                Borrowers.Columns.borrowerType == "Student"
             )
             .fetchOne(db)
             
         print(studentBorrowers as Any)
         } 
-*/
+
         } catch {
             print(error)
             exit(1)
