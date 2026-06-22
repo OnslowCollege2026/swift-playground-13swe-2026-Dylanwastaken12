@@ -8,7 +8,7 @@ struct Borrowers: Identifiable, Codable, FetchableRecord, PersistableRecord {
     var email: String
     var borrowerType: String
     var yearLevel: Int
-    var loanID: Int
+
 
     enum CodingKeys: String, CodingKey {
         case id = "BorrowerID"
@@ -17,7 +17,6 @@ struct Borrowers: Identifiable, Codable, FetchableRecord, PersistableRecord {
         case email = "Email"
         case borrowerType = "Borrower Type"
         case yearLevel = "Year Level"
-        case loanID = "LoanID"
     }
 
     enum Columns {
@@ -27,7 +26,6 @@ struct Borrowers: Identifiable, Codable, FetchableRecord, PersistableRecord {
         static let email = Column(CodingKeys.email)
         static let borrowerType = Column(CodingKeys.borrowerType)
         static let yearLevel = Column(CodingKeys.yearLevel)
-        static let loanID = Column(CodingKeys.loanID)
     }
 }
 
@@ -37,12 +35,16 @@ struct Loans: Identifiable, Codable, FetchableRecord, PersistableRecord {
     var dateOfIssue: String
     var dateOfReturn: String
     var dueDate: String
+    let borrowerID: Int
+    let itemID: Int
 
     enum CodingKeys: String, CodingKey {
         case id = "LoanID"
         case dateOfIssue = "Date of Issue"
         case dateOfReturn = "Date of Return"
         case dueDate = "Due Date"
+        case borrowerID = "BorrowerID"
+        case itemID = "ItemID"
     }
 
     enum Columns {
@@ -50,6 +52,8 @@ struct Loans: Identifiable, Codable, FetchableRecord, PersistableRecord {
         static let dateOfIssue = Column(CodingKeys.dateOfIssue)
         static let dateOfReturn = Column(CodingKeys.dateOfReturn)
         static let dueDate = Column(CodingKeys.dueDate)
+        static let borrowerID = Column(CodingKeys.borrowerID)
+        static let itemID = Column(CodingKeys.itemID)
     }
 }
 
@@ -59,14 +63,12 @@ struct Items: Identifiable, Codable, FetchableRecord, PersistableRecord {
     var itemName: String
     var itemType: String
     var itemCondition: String
-    var loanID: Int
 
     enum CodingKeys: String, CodingKey {
         case id = "ItemID"
         case itemName = "Item Name"
         case itemType = "Item Type"
         case itemCondition = "Item Condition"
-        case loanID = "LoanID"
     }
 
     enum Columns {
@@ -74,20 +76,19 @@ struct Items: Identifiable, Codable, FetchableRecord, PersistableRecord {
         static let itemName = Column(CodingKeys.itemName)
         static let itemType = Column(CodingKeys.itemType)
         static let itemCondition = Column(CodingKeys.itemCondition)
-        static let loanID = Column(CodingKeys.loanID)
     }
 }
 
 @main
 struct SwiftPlayground {
     static func main() {
-        let dbPath = "Sources/SwiftPlayground/Japanese-Item-tracking.db"
+        let dbPath = "Sources/SwiftPlayground/Japanese Item tracking.db"
 
         var dbQueue: DatabaseQueue
         do {
             dbQueue = try DatabaseQueue(path: dbPath)
             print("database connection succesful")
-
+/*
         try dbQueue.read { db in
         let userBorrower = try Borrowers
             .filter(Borrowers.Columns.givenName == "Liam")
@@ -99,26 +100,15 @@ struct SwiftPlayground {
                 print("No match for the given name")
             }
         }
+*/
 
         try dbQueue.read { db in
             let seniorBorrowers = try Borrowers
-                .filter(Borrowers.Columns.yearLevel >= 12)
-                .order(Borrowers.Columns.givenName)
+                .filter(Borrowers.Columns.yearLevel == "12" || "13")
                 .fetchAll(db)
             
             print(seniorBorrowers)
         }
-
-
-        try dbQueue.read { db in
-            let studentBorrowers = try Borrowers
-            .filter(
-                Borrowers.Columns.borrowerType == "Student"
-            )
-            .fetchOne(db)
-            
-        print(studentBorrowers as Any)
-        } 
 
         } catch {
             print(error)
