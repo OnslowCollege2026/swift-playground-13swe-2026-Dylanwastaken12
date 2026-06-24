@@ -7,7 +7,7 @@ struct Borrowers: Identifiable, Codable, FetchableRecord, PersistableRecord {
     var familyName: String
     var email: String
     var borrowerType: String
-    var yearLevel: Int
+    var yearLevel: String?
 
 
     enum CodingKeys: String, CodingKey {
@@ -33,7 +33,7 @@ struct Loans: Identifiable, Codable, FetchableRecord, PersistableRecord {
 
     let id: Int
     var dateOfIssue: String
-    var dateOfReturn: String
+    var dateOfReturn: String?
     var dueDate: String
     let borrowerID: Int
     let itemID: Int
@@ -88,7 +88,7 @@ struct SwiftPlayground {
         do {
             dbQueue = try DatabaseQueue(path: dbPath)
             print("database connection succesful")
-/*
+
         try dbQueue.read { db in
         let userBorrower = try Borrowers
             .filter(Borrowers.Columns.givenName == "Liam")
@@ -100,14 +100,32 @@ struct SwiftPlayground {
                 print("No match for the given name")
             }
         }
-*/
 
         try dbQueue.read { db in
             let seniorBorrowers = try Borrowers
                 .filter(Borrowers.Columns.yearLevel == "12" || "13")
                 .fetchAll(db)
-            
-            print(seniorBorrowers)
+            for borrower in seniorBorrowers {
+                if borrower.yearLevel != nil {
+                    print("Name: \(borrower.givenName), year level: \(borrower.yearLevel)")
+                } else {
+                    print("Name: \(borrower.givenName), year level: \(borrower.borrowerType)")
+                }
+                
+            }
+        }
+
+        try dbQueue.write { db in
+            var newBorrower = Borrowers(id: 17, givenName: "Dylan", familyName: "Jenkins", email: "djenkins@example.com",   borrowerType: "Student", yearLevel: "13")
+            try newBorrower.insert(db)
+            print(newBorrower)
+        }
+
+        try dbQueue.read { db in
+            let activeLoans = try Loans
+                .filter(Loans.Columns.dateOfReturn == nil)
+                .fetchAll(db)
+                print(activeLoans)
         }
 
         } catch {
