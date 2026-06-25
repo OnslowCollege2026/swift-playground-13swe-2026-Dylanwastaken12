@@ -2,7 +2,7 @@ import Foundation
 import GRDB
 struct Borrowers: Identifiable, Codable, FetchableRecord, PersistableRecord {
 
-    let id: Int
+    let id: Int?
     var givenName: String
     var familyName: String
     var email: String
@@ -31,7 +31,7 @@ struct Borrowers: Identifiable, Codable, FetchableRecord, PersistableRecord {
 
 struct Loans: Identifiable, Codable, FetchableRecord, PersistableRecord {
 
-    let id: Int
+    let id: Int?
     var dateOfIssue: String
     var dateOfReturn: String?
     var dueDate: String
@@ -59,7 +59,7 @@ struct Loans: Identifiable, Codable, FetchableRecord, PersistableRecord {
 
 struct Items: Identifiable, Codable, FetchableRecord, PersistableRecord {
 
-    let id: Int
+    let id: Int?
     var itemName: String
     var itemType: String
     var itemCondition: String
@@ -100,7 +100,7 @@ struct SwiftPlayground {
                 print("No match for the given name")
             }
         }
-
+        // This try statement prints a list of senior borrowers, these borrowers are either staff or a year level higher than 11.
         try dbQueue.read { db in
             let seniorBorrowers = try Borrowers
                 .filter(Borrowers.Columns.yearLevel == "12" || "13")
@@ -115,8 +115,9 @@ struct SwiftPlayground {
             }
         }
 
+        // This part writes to the database, but it needs to be changed so that the user can decide what the names, email and etc are. extra dbQueue.write statements should also be written so the user can add new items and make new loans
         try dbQueue.write { db in
-            var newBorrower = Borrowers(id: 17, givenName: "Dylan", familyName: "Jenkins", email: "djenkins@example.com",   borrowerType: "Student", yearLevel: "13")
+            var newBorrower = Borrowers(id: nil, givenName: "Greg", familyName: "Greg", email: "ggreg@example.com",   borrowerType: "Student", yearLevel: "12")
             try newBorrower.insert(db)
             print(newBorrower)
         }
@@ -125,11 +126,12 @@ struct SwiftPlayground {
             let activeLoans = try Loans
                 .filter(Loans.Columns.dateOfReturn == nil)
                 .fetchAll(db)
+                // This works, it would just be better to print out the loans in a more ordered way.
                 print(activeLoans)
         }
 
         } catch {
-            print(error)
+            print("The error that happened is: \(error)")
             exit(1)
         }
     }
