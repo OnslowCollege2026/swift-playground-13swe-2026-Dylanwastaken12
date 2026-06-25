@@ -83,6 +83,7 @@ struct Items: Identifiable, Codable, FetchableRecord, PersistableRecord {
 struct SwiftPlayground {
     static func main() {
         let dbPath = "Sources/SwiftPlayground/Japanese Item tracking.db"
+        var dataEntry = true
 
         var dbQueue: DatabaseQueue
         do {
@@ -115,8 +116,75 @@ struct SwiftPlayground {
             }
         }
 
-        // This part writes to the database, but it needs to be changed so that the user can decide what the names, email and etc are. extra dbQueue.write statements should also be written so the user can add new items and make new loans
-        try dbQueue.write { db in
+        /* This part writes to the database, but it needs to be changed so that the user can decide what the names, email and etc are. extra dbQueue.write statements should also be written so the user can add new items and make new loans
+
+        Temporary example code: 
+        if userEntry.lowercased() == "a" {
+                    repeat{
+                        inputtingBook = false
+                        
+                        let userBookTitle: String = ""
+                        let userBookAuthor: String = ""
+
+                        print("What is the name of the book?")
+                        guard let userBookTitle = readLine(), !userBookTitle.isEmpty, userBookTitle.count < 30 else {
+                            print("Book Title is required, or is too long.")
+                            inputtingBook = true
+                            continue 
+                        }
+                        print("Your book title is \(userBookTitle)")
+
+                        print("Who is the author?")
+                        guard let userBookAuthor = readLine(), !userBookAuthor.isEmpty, userBookAuthor.count < 15 else {
+                            print("Book Author is required, or is too long")
+                            inputtingBook = true
+                            continue
+                        }
+                        print("Your author is \(userBookAuthor)")
+
+                        books.append(Book(id: UUID(), bookTitle: userBookTitle, available: true, author: userBookAuthor))
+                        print("The new list of available books is \(books)")
+                    } while inputtingBook == true
+                }
+
+        */
+            while dataEntry == true {
+            print("What is the first name of the Borrower you are adding?")
+            guard let userBorrowerFirstName = readLine(), !userBorrowerFirstName.isEmpty, else {
+                print("First Name is required")
+                dataEntry = false
+                continue
+            }
+
+            print("What is the last name of the Borrower you are adding?")
+            guard let userBorrowerLastName = readLine(), !userBorrowerLastName.isEmpty, else {
+                print("Last name is required")
+                dataEntry = false
+                continue
+            }
+
+            print("What is the email address of the Borrower you are adding?")
+            guard let userBorrowerEmail = readLine(), !userBorrowerEmail.isEmpty, else {
+                print("Email is required")
+                dataEntry = false
+                continue
+            }
+
+            print("Is the borrower a "Student" or a "Staff"?")
+            guard let userBorrowerType = readLine(), userBorrowerType != "Student", userBorrowerType != "Staff", else {
+                print("Borrower type is required")
+                dataEntry = false
+                continue
+            }
+
+            if userBorrowerType != "Student" {
+                // Add the part that creates the year level for the borrower here:
+            }
+
+        }
+        try 
+
+            dbQueue.write { db in
             var newBorrower = Borrowers(id: nil, givenName: "Greg", familyName: "Greg", email: "ggreg@example.com",   borrowerType: "Student", yearLevel: "12")
             try newBorrower.insert(db)
             print(newBorrower)
