@@ -9,6 +9,10 @@ struct Borrowers: Identifiable, Codable, FetchableRecord, PersistableRecord {
     var borrowerType: String
     var yearLevel: String?
 
+    func summary() -> String {
+        "Borrower: \(givenName) \(familyName) has the email: \(email) and is a \(borrowerType)"
+    }
+
 
     enum CodingKeys: String, CodingKey {
         case id = "BorrowerID"
@@ -90,6 +94,8 @@ struct SwiftPlayground {
         do {
             dbQueue = try DatabaseQueue(path: dbPath)
             print("database connection succesful")
+/*
+        TEST READING FROM THE DATABASE
 
         try dbQueue.read { db in
         let userBorrower = try Borrowers
@@ -102,102 +108,61 @@ struct SwiftPlayground {
                 print("No match for the given name")
             }
         }
-        // This try statement prints a list of senior borrowers, these borrowers are either staff or a year level higher than 11.
-        try dbQueue.read { db in
-            let seniorBorrowers = try Borrowers
-                .filter(Borrowers.Columns.yearLevel == "12" || "13")
-                .fetchAll(db)
-            for borrower in seniorBorrowers {
-                if borrower.yearLevel != nil {
-                    print("Name: \(borrower.givenName), year level: \(borrower.yearLevel)")
-                } else {
-                    print("Name: \(borrower.givenName), year level: \(borrower.borrowerType)")
-                }
-                
-            }
-        }
-
-        /* This part writes to the database, but it needs to be changed so that the user can decide what the names, email and etc are. extra dbQueue.write statements should also be written so the user can add new items and make new loans
-
-        Temporary example code: 
-        if userEntry.lowercased() == "a" {
-                    repeat{
-                        inputtingBook = false
-                        
-                        let userBookTitle: String = ""
-                        let userBookAuthor: String = ""
-
-                        print("What is the name of the book?")
-                        guard let userBookTitle = readLine(), !userBookTitle.isEmpty, userBookTitle.count < 30 else {
-                            print("Book Title is required, or is too long.")
-                            inputtingBook = true
-                            continue 
-                        }
-                        print("Your book title is \(userBookTitle)")
-
-                        print("Who is the author?")
-                        guard let userBookAuthor = readLine(), !userBookAuthor.isEmpty, userBookAuthor.count < 15 else {
-                            print("Book Author is required, or is too long")
-                            inputtingBook = true
-                            continue
-                        }
-                        print("Your author is \(userBookAuthor)")
-
-                        books.append(Book(id: UUID(), bookTitle: userBookTitle, available: true, author: userBookAuthor))
-                        print("The new list of available books is \(books)")
-                    } while inputtingBook == true
-                }
-
-        */
+*/
             while dataEntry == true {
-            print("What is the first name of the Borrower you are adding?")
-            guard let userBorrowerFirstName = readLine(), !userBorrowerFirstName.isEmpty else {
-                print("First Name is required")
                 dataEntry = false
-                continue
-            }
-
-            print("What is the last name of the Borrower you are adding?")
-            guard let userBorrowerLastName = readLine(), !userBorrowerLastName.isEmpty else {
-                print("Last name is required")
-                dataEntry = false
-                continue
-            }
-
-            print("What is the email address of the Borrower you are adding?")
-            guard let userBorrowerEmail = readLine(), !userBorrowerEmail.isEmpty else {
-                print("Email is required")
-                dataEntry = false
-                continue
-            }
-
-            print("Is the borrower a Student or a Staff? Enter 1, if they are a Student, enter 2, if they are Staff.")
-            guard let userBorrowerType = readLine(), !userBorrowerType.isEmpty else {
-                print("Borrower type is required")
-                dataEntry = false
-                continue
-            }
-
-            if userBorrowerType == "1" {
-                print("What is the year level of the Student? Year level should be between 9 and 13")
-                guard var userYearLevel = readLine(), userYearLevel != "9", userYearLevel != "10", userYearLevel != "11", userYearLevel != "12", userYearLevel != "13" else {
-                    print("Year level should be a number between 9 and 13")
+                print("What is the first name of the Borrower you are adding?")
+                guard let userBorrowerFirstName = readLine(), !userBorrowerFirstName.isEmpty else {
+                    print("First Name is required")
                     dataEntry = false
                     continue
                 }
-            } else if userBorrowerType == "2" {
-                // If the borrower type is "Staff"
+
+                print("What is the last name of the Borrower you are adding?")
+                guard let userBorrowerLastName = readLine(), !userBorrowerLastName.isEmpty else {
+                    print("Last name is required")
+                    dataEntry = false
+                    continue
+                }
+
+                print("What is the email address of the Borrower you are adding?")
+                guard let userBorrowerEmail = readLine(), !userBorrowerEmail.isEmpty else {
+                    print("Email is required")
+                    dataEntry = false
+                    continue
+                }
+
+                print("Is the borrower a Student or a Staff? Enter 1, if they are a Student, enter 2, if they are Staff.")
+                guard let userBorrowerType = readLine(), !userBorrowerType.isEmpty else {
+                    print("Borrower type is required")
+                    dataEntry = false
+                    continue
+                }
+
+                if userBorrowerType == "1" {
+                    print("What is the year level of the Student? Year level should be between 9 and 13")
+                    guard var userYearLevel = readLine(), ["9", "10", "11", "12", "13"].contains(userYearLevel) else {
+                        print("Year level should be a number between 9 and 13")
+                        dataEntry = false
+                        continue
+                    }
+                } else if userBorrowerType == "2" {
+                    userYearLevel = nil
+                } else {
+                    dataEntry = true
+                }
+
+                try dbQueue.write { db in
+                    var newBorrower = Borrowers(id: nil, givenName: userBorrowerFirstName, familyName: userBorrowerLastName, email: userBorrowerEmail,   borrowerType: userBorrowerType, yearLevel: userYearLevel)
+                    try newBorrower.insert(db)
+
+                    let borrowerList = try Row.fetchAll(db, sql: "SELECT * FROM Borrowers")
+                    for borrower in borrowerList {
+                        print(borrower)
+                    }
+                }
             }
 
-            
-        }
-        try 
-
-            dbQueue.write { db in
-            var newBorrower = Borrowers(id: nil, givenName: "Greg", familyName: "Greg", email: "ggreg@example.com",   borrowerType: "Student", yearLevel: "12")
-            try newBorrower.insert(db)
-            print(newBorrower)
-        }
 
         try dbQueue.read { db in
             let activeLoans = try Loans
