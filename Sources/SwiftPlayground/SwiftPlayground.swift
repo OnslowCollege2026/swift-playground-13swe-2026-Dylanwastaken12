@@ -84,6 +84,7 @@ struct SwiftPlayground {
     static func main() {
         let dbPath = "Sources/SwiftPlayground/Japanese Item tracking.db"
         var dataEntry = true
+        var userYearLevel: String? = nil
 
         var dbQueue: DatabaseQueue
         do {
@@ -150,37 +151,45 @@ struct SwiftPlayground {
         */
             while dataEntry == true {
             print("What is the first name of the Borrower you are adding?")
-            guard let userBorrowerFirstName = readLine(), !userBorrowerFirstName.isEmpty, else {
+            guard let userBorrowerFirstName = readLine(), !userBorrowerFirstName.isEmpty else {
                 print("First Name is required")
                 dataEntry = false
                 continue
             }
 
             print("What is the last name of the Borrower you are adding?")
-            guard let userBorrowerLastName = readLine(), !userBorrowerLastName.isEmpty, else {
+            guard let userBorrowerLastName = readLine(), !userBorrowerLastName.isEmpty else {
                 print("Last name is required")
                 dataEntry = false
                 continue
             }
 
             print("What is the email address of the Borrower you are adding?")
-            guard let userBorrowerEmail = readLine(), !userBorrowerEmail.isEmpty, else {
+            guard let userBorrowerEmail = readLine(), !userBorrowerEmail.isEmpty else {
                 print("Email is required")
                 dataEntry = false
                 continue
             }
 
-            print("Is the borrower a "Student" or a "Staff"?")
-            guard let userBorrowerType = readLine(), userBorrowerType != "Student", userBorrowerType != "Staff", else {
+            print("Is the borrower a Student or a Staff? Enter 1, if they are a Student, enter 2, if they are Staff.")
+            guard let userBorrowerType = readLine(), !userBorrowerType.isEmpty else {
                 print("Borrower type is required")
                 dataEntry = false
                 continue
             }
 
-            if userBorrowerType != "Student" {
-                // Add the part that creates the year level for the borrower here:
+            if userBorrowerType == "1" {
+                print("What is the year level of the Student? Year level should be between 9 and 13")
+                guard var userYearLevel = readLine(), userYearLevel != "9", userYearLevel != "10", userYearLevel != "11", userYearLevel != "12", userYearLevel != "13" else {
+                    print("Year level should be a number between 9 and 13")
+                    dataEntry = false
+                    continue
+                }
+            } else if userBorrowerType == "2" {
+                // If the borrower type is "Staff"
             }
 
+            
         }
         try 
 
