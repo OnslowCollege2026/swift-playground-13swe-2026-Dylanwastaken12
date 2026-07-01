@@ -10,7 +10,7 @@ struct Borrowers: Identifiable, Codable, FetchableRecord, PersistableRecord {
     var yearLevel: String?
 
     func summary() -> String {
-        "Borrower: \(givenName) \(familyName) has the email: \(email) and is a \(borrowerType)"
+        return "Borrower: \(givenName) \(familyName) has the email: \(email) and is a \(borrowerType)"
     }
 
 
@@ -41,6 +41,10 @@ struct Loans: Identifiable, Codable, FetchableRecord, PersistableRecord {
     var dueDate: String
     let borrowerID: Int
     let itemID: Int
+    
+    func summary() -> String {
+        return "This item with id: \(itemID) was issued on \(dateOfIssue),  is due back: \(dueDate) from borrower: \(borrowerID)"
+    }
 
     enum CodingKeys: String, CodingKey {
         case id = "LoanID"
@@ -68,6 +72,10 @@ struct Items: Identifiable, Codable, FetchableRecord, PersistableRecord {
     var itemType: String
     var itemCondition: String
 
+    func summary() -> String {
+        return "Item: \(itemName) is a \(itemType) and is in \(itemCondition) condition."
+    }
+
     enum CodingKeys: String, CodingKey {
         case id = "ItemID"
         case itemName = "Item Name"
@@ -94,72 +102,107 @@ struct SwiftPlayground {
         do {
             dbQueue = try DatabaseQueue(path: dbPath)
             print("database connection succesful")
-/*
-        TEST READING FROM THE DATABASE
 
-        try dbQueue.read { db in
-        let userBorrower = try Borrowers
-            .filter(Borrowers.Columns.givenName == "Liam")
-            .fetchOne(db)
-
-            if let userBorrower {
-                print("Found Borrower: \(userBorrower)")
-            } else {
-                print("No match for the given name")
-            }
-        }
-*/
             while dataEntry == true {
-                dataEntry = false
-                print("What is the first name of the Borrower you are adding?")
-                guard let userBorrowerFirstName = readLine(), !userBorrowerFirstName.isEmpty else {
-                    print("First Name is required")
+                print("""
+                What action would you like to take next?
+                1: Print a list of borrrowers
+                2: Print a list of available items
+                3: Add a new borrower
+                4: Add a new item
+                5: Create a loan
+                6: Print a list of ongoing loans
+                7: End the program
+                """)
+
+                guard let userChoice = readLine(), !userChoice.isEmpty else {
+                    print("Please enter one of the options")
                     dataEntry = false
                     continue
                 }
 
-                print("What is the last name of the Borrower you are adding?")
-                guard let userBorrowerLastName = readLine(), !userBorrowerLastName.isEmpty else {
-                    print("Last name is required")
-                    dataEntry = false
-                    continue
+                if userChoice == "1" {
+                    try dbQueue.read { db in
+                        let borrowerList = try Row.fetchAll(db, sql: "SELECT * FROM Borrowers")
+                        for borrower in borrowerList {
+                            print(borrower)
+                        }
+                    }
                 }
 
-                print("What is the email address of the Borrower you are adding?")
-                guard let userBorrowerEmail = readLine(), !userBorrowerEmail.isEmpty else {
-                    print("Email is required")
-                    dataEntry = false
-                    continue
+                if userChoice == "2" {
+                    try dbQueue.read { db in
+                        let itemList = try Row.fetchAll(db, sql: "SELECT * FROM Items")
+                        for item in itemList {
+                            print(item)
+                        }
+                    }
                 }
 
-                print("Is the borrower a Student or a Staff? Enter 1, if they are a Student, enter 2, if they are Staff.")
-                guard let userBorrowerType = readLine(), !userBorrowerType.isEmpty else {
-                    print("Borrower type is required")
+                if userChoice == "3" {
+                    
                     dataEntry = false
-                    continue
-                }
-
-                if userBorrowerType == "1" {
-                    print("What is the year level of the Student? Year level should be between 9 and 13")
-                    guard var userYearLevel = readLine(), ["9", "10", "11", "12", "13"].contains(userYearLevel) else {
-                        print("Year level should be a number between 9 and 13")
+                    print("What is the first name of the Borrower you are adding?")
+                    guard let userBorrowerFirstName = readLine(), !userBorrowerFirstName.isEmpty else {
+                        print("First Name is required")
                         dataEntry = false
                         continue
                     }
-                } else if userBorrowerType == "2" {
-                    userYearLevel = nil
-                } else {
-                    dataEntry = true
+
+                    print("What is the last name of the Borrower you are adding?")
+                    guard let userBorrowerLastName = readLine(), !userBorrowerLastName.isEmpty else {
+                        print("Last name is required")
+                        dataEntry = false
+                        continue
+                    }
+
+                    print("What is the email address of the Borrower you are adding?")
+                    guard let userBorrowerEmail = readLine(), !userBorrowerEmail.isEmpty else {
+                        print("Email is required")
+                        dataEntry = false
+                        continue
+                    }
+
+                    print("Is the borrower a Student or a Staff? Enter 1, if they are a Student, enter 2, if they are Staff.")
+                    guard let userBorrowerType = readLine(), !userBorrowerType.isEmpty else {
+                        print("Borrower type is required")
+                        dataEntry = false
+                        continue
+                    }
+
+                    if userBorrowerType == "1" {
+                        print("What is the year level of the Student? Year level should be between 9 and 13")
+                        guard var userYearLevel = readLine(), ["9", "10", "11", "12", "13"].contains(userYearLevel) else {
+                            print("Year level should be a number between 9 and 13")
+                            dataEntry = false
+                            continue
+                        }
+                    } else if userBorrowerType == "2" {
+                        userYearLevel = nil
+                    } else {
+                        dataEntry = true
+                    }
+
+                    try dbQueue.write { db in
+                        var newBorrower = Borrowers(id: nil, givenName: userBorrowerFirstName, familyName: userBorrowerLastName, email: userBorrowerEmail,   borrowerType: userBorrowerType, yearLevel: userYearLevel)
+                        try newBorrower.insert(db)
+                    }
+
+                if userChoice == "6" {
+                    try dbQueue.read { db in
+                        let activeLoans = try Loans
+                            .filter(Loans.Columns.dateOfReturn == nil)
+                            .fetchAll(db)
+                        print(activeLoans)
+                    }
                 }
 
-                try dbQueue.write { db in
-                    var newBorrower = Borrowers(id: nil, givenName: userBorrowerFirstName, familyName: userBorrowerLastName, email: userBorrowerEmail,   borrowerType: userBorrowerType, yearLevel: userYearLevel)
-                    try newBorrower.insert(db)
 
-                    let borrowerList = try Row.fetchAll(db, sql: "SELECT * FROM Borrowers")
-                    for borrower in borrowerList {
-                        print(borrower)
-                    }
+
+
+
+                } else {
+                    continue
                 }
             }
 
