@@ -132,9 +132,9 @@ struct SwiftPlayground {
 
                 if userChoice == "2" {
                     try dbQueue.read { db in
-                        let itemList = try Row.fetchAll(db, sql: "SELECT * FROM Items")
+                        let itemList = try Items.fetchAll(db)
                         for item in itemList {
-                            print(item)
+                            print(item.summary())
                         }
                     }
                 }
@@ -197,23 +197,16 @@ struct SwiftPlayground {
                     }
                 }
 
+                if userChoice == "7" {
+                    dataEntry = false
+                }
 
-
-
-
-                } else {
+                else {
+                    print("Please enter one of the options")
                     continue
                 }
+                }
             }
-
-
-        try dbQueue.read { db in
-            let activeLoans = try Loans
-                .filter(Loans.Columns.dateOfReturn == nil)
-                .fetchAll(db)
-                // This works, it would just be better to print out the loans in a more ordered way.
-                print(activeLoans)
-        }
 
         } catch {
             print("The error that happened is: \(error)")
