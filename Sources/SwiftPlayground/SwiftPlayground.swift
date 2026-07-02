@@ -1,6 +1,6 @@
 import Foundation
 import GRDB
-struct Borrowers: Identifiable, Codable, FetchableRecord, PersistableRecord {
+struct Borrowers: Identifiable, Codable, FetchableRecord, PersistableRecord, TableRecord {
 
     let id: Int?
     var givenName: String
@@ -33,7 +33,7 @@ struct Borrowers: Identifiable, Codable, FetchableRecord, PersistableRecord {
     }
 }
 
-struct Loans: Identifiable, Codable, FetchableRecord, PersistableRecord {
+struct Loans: Identifiable, Codable, FetchableRecord, PersistableRecord, TableRecord {
 
     let id: Int?
     var dateOfIssue: String
@@ -65,7 +65,7 @@ struct Loans: Identifiable, Codable, FetchableRecord, PersistableRecord {
     }
 }
 
-struct Items: Identifiable, Codable, FetchableRecord, PersistableRecord {
+struct Items: Identifiable, Codable, FetchableRecord, PersistableRecord, TableRecord {
 
     let id: Int?
     var itemName: String
@@ -123,9 +123,9 @@ struct SwiftPlayground {
 
                 if userChoice == "1" {
                     try dbQueue.read { db in
-                        let borrowerList = try Row.fetchAll(db, sql: "SELECT * FROM Borrowers")
+                        let borrowerList = try Borrowers.fetchAll(db)
                         for borrower in borrowerList {
-                            print(borrower)
+                            print(borrower.summary())
                         }
                     }
                 }
