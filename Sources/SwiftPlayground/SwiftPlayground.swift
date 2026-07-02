@@ -103,7 +103,8 @@ struct SwiftPlayground {
             dbQueue = try DatabaseQueue(path: dbPath)
             print("database connection succesful")
 
-            while dataEntry == true {
+            repeat {
+                dataEntry = true
                 print("""
                 What action would you like to take next?
                 1: Print a list of borrrowers
@@ -140,8 +141,7 @@ struct SwiftPlayground {
                 }
 
                 if userChoice == "3" {
-                    
-                    dataEntry = false
+
                     print("What is the first name of the Borrower you are adding?")
                     guard let userBorrowerFirstName = readLine(), !userBorrowerFirstName.isEmpty else {
                         print("First Name is required")
@@ -164,50 +164,69 @@ struct SwiftPlayground {
                     }
 
                     print("Is the borrower a Student or a Staff? Enter 1, if they are a Student, enter 2, if they are Staff.")
-                    guard let userBorrowerType = readLine(), !userBorrowerType.isEmpty else {
+                    guard let userBorrowerTypeInput = readLine(), !userBorrowerTypeInput.isEmpty else {
                         print("Borrower type is required")
                         dataEntry = false
                         continue
                     }
 
-                    if userBorrowerType == "1" {
+                    if userBorrowerTypeInput == "1" {
+                    var userBorrowerType = "Student"
                         print("What is the year level of the Student? Year level should be between 9 and 13")
                         guard var userYearLevel = readLine(), ["9", "10", "11", "12", "13"].contains(userYearLevel) else {
                             print("Year level should be a number between 9 and 13")
                             dataEntry = false
                             continue
                         }
-                    } else if userBorrowerType == "2" {
+                        try dbQueue.write { db in
+                            var newBorrower = Borrowers(id: nil, givenName: userBorrowerFirstName, familyName: userBorrowerLastName, email: userBorrowerEmail,   borrowerType: userBorrowerType, yearLevel: userYearLevel)
+                            try newBorrower.insert(db)
+                        }
+
+                    } else if userBorrowerTypeInput == "2" {
                         userYearLevel = nil
+                        var userBorrowerType = "Staff"
+                        try dbQueue.write { db in
+                            var newBorrower = Borrowers(id: nil, givenName: userBorrowerFirstName, familyName: userBorrowerLastName, email: userBorrowerEmail,   borrowerType: userBorrowerType, yearLevel: userYearLevel)
+                            try newBorrower.insert(db)
+                        }
+
                     } else {
                         dataEntry = true
                     }
 
-                    try dbQueue.write { db in
-                        var newBorrower = Borrowers(id: nil, givenName: userBorrowerFirstName, familyName: userBorrowerLastName, email: userBorrowerEmail,   borrowerType: userBorrowerType, yearLevel: userYearLevel)
-                        try newBorrower.insert(db)
-                    }
-
-                    if userChoice == "6" {
-                        try dbQueue.read { db in
-                            let activeLoans = try Loans
-                                .filter(Loans.Columns.dateOfReturn == nil)
-                                .fetchAll(db)
-                            print(activeLoans)
-                        }
-                    }
-
-                    if userChoice == "7" {
-                        print("Thanks for using this database.")
+                if userChoice == "4" {
+                    print("What is the name of the Item you are adding?")
+                    guard let userItemName = readLine(), !userBorrowerFirstName.isEmpty else {
+                        print("Item Name is required")
                         dataEntry = false
-                    }
-
-                    else {
-                        print("Please enter one of the options")
-                        dataEntry = true
+                        continue
                     }
                 }
+
+
+                if userChoice == "6" {
+                    try dbQueue.read { db in
+                        var loanList = try Loans.fetchAll(db)
+                        for loan in loanList {
+                            if Loans.Columns.dateOfReturn == nil {
+                                print(loan.summary())
+                            }
+                        }
+                    }
+                }
+
+                if userChoice == "7" {
+                    print("Thanks for using this database.")
+                    dataEntry = false
+                }
+
+                else {
+                    print("Please enter one of the options")
+                    dataEntry = true
+                }
             }
+        } while dataEntry == true
 
         } catch {
             print("The error that happened is: \(error)")
