@@ -197,11 +197,56 @@ struct SwiftPlayground {
 
                 if userChoice == "4" {
                     print("What is the name of the Item you are adding?")
-                    guard let userItemName = readLine(), !userBorrowerFirstName.isEmpty else {
+                    guard let userItemName = readLine(), !userItemName.isEmpty else {
                         print("Item Name is required")
                         dataEntry = false
                         continue
                     }
+
+                    print("What is the type of item you are adding? eg: book, movie, textbook")
+                    guard let userItemType = readLine(), !userItemType.isEmpty else {
+                        print("Item Type is required")
+                        dataEntry = false
+                        continue
+                    }
+
+                    print("What is the condition of the item you are adding? eg: good, fair, bad")
+                    guard let userItemCondition = readLine(), !userItemCondition.isEmpty else {
+                        print("Item condition is required")
+                        dataEntry = false
+                        continue
+                    }
+
+                    try dbQueue.write { db in
+                            let newItem = Items(id: nil, itemName: userItemName, itemType: userItemType, itemCondition: userItemCondition)
+                            try newItem.insert(db)
+                    }
+                }
+
+                if userChoice == "5" {
+                    print("What is the date of issue? Date format should be YYYY/MM/DD")
+                    guard let userIssueDate = readLine(), !userIssueDate.isEmpty else {
+                        print("Date of Issue is required")
+                        dataEntry = false
+                        continue
+                    }
+
+                    print("""
+                        What is the date of return of the Item?
+                        date format is the same as the date of issue
+
+                        If the item hasn't been returned yet, enter a null input
+                        """)
+                    let userReturnDate = readLine()
+
+                    print("What is the due date of the item? date format is still: YYYY/MM/DD")
+                    guard let userDueDate = readLine(), !userDueDate.isEmpty else {
+                        print("Due Date is required")
+                        dataEntry = false
+                        continue
+                    }
+
+                    // Add all the stuff for BorrowerID and ItemID here for writing a new loan to the database
                 }
 
 
