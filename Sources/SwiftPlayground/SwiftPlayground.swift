@@ -188,23 +188,24 @@ struct SwiftPlayground {
                         try newBorrower.insert(db)
                     }
 
-                if userChoice == "6" {
-                    try dbQueue.read { db in
-                        let activeLoans = try Loans
-                            .filter(Loans.Columns.dateOfReturn == nil)
-                            .fetchAll(db)
-                        print(activeLoans)
+                    if userChoice == "6" {
+                        try dbQueue.read { db in
+                            let activeLoans = try Loans
+                                .filter(Loans.Columns.dateOfReturn == nil)
+                                .fetchAll(db)
+                            print(activeLoans)
+                        }
                     }
-                }
 
-                if userChoice == "7" {
-                    dataEntry = false
-                }
+                    if userChoice == "7" {
+                        print("Thanks for using this database.")
+                        dataEntry = false
+                    }
 
-                else {
-                    print("Please enter one of the options")
-                    continue
-                }
+                    else {
+                        print("Please enter one of the options")
+                        dataEntry = true
+                    }
                 }
             }
 
