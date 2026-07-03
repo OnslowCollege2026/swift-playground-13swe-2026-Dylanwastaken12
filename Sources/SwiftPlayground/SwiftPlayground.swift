@@ -252,7 +252,11 @@ struct SwiftPlayground {
                             print(borrower)
                         }
                     }
-                    print("For the above list of borrowers, which person is borrowing the item? Enter the id number of the b")
+                    print("""
+                    For the above list of borrowers, which person is borrowing the item? 
+                    
+                    Enter the id number of the borrower
+                    """)
                 }
 
 
