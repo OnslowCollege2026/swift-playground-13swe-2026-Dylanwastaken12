@@ -98,12 +98,16 @@ struct SwiftPlayground {
         var dataEntry = true
         var userYearLevel: String? = nil
 
+        
+
         var dbQueue: DatabaseQueue
+
         do {
             dbQueue = try DatabaseQueue(path: dbPath)
             print("database connection succesful")
 
             repeat {
+                
                 dataEntry = true
                 print("""
                 What action would you like to take next?
@@ -251,12 +255,21 @@ struct SwiftPlayground {
                         for borrower in borrowerList {
                             print(borrower)
 
+                        let borrowerIDList = try dbQueue.read {db in
+                            try Int.fetchAll(db, sql: "SELECT BorrowerID FROM Borrowers")
+                        }
+
                         print("""
                         For the above list of borrowers, which person is borrowing the item? 
                         Enter the id number of the borrower
-                        """)
+                        """) //[borrowerIDList].contains(userBorrowerIDInput)
 
-                        guard let userBorrowerID = readLine(), userBorrowerID? == [Borrowers.id]
+                        guard let userBorrowerIDInput = readLine(), !userBorrowerIDInput.isEmpty else {
+                            print("BorrowerID is required")
+                            dataEntry = false
+                            continue
+                        }
+                        
                         }
                     }
                 }
