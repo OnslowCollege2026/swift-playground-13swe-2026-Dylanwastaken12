@@ -13,10 +13,6 @@ struct Borrowers: Identifiable, Codable, FetchableRecord, PersistableRecord, Tab
         return "Borrower: \(givenName) \(familyName) has the email: \(email) and is a \(borrowerType)"
     }
 
-    func summary2() -> String {
-        return "Borrower's 
-    }
-
 
     enum CodingKeys: String, CodingKey {
         case id = "BorrowerID"
@@ -250,7 +246,13 @@ struct SwiftPlayground {
                         continue
                     }
 
-                    print("")
+                    try dbQueue.read { db in
+                        let borrowerList = try Borrowers.fetchAll(db)
+                        for borrower in borrowerList {
+                            print(borrower)
+                        }
+                    }
+                    print("For the above list of borrowers, which person is borrowing the item? Enter the id number of the b")
                 }
 
 
