@@ -107,7 +107,6 @@ struct SwiftPlayground {
             print("database connection succesful")
 
             repeat {
-                
                 dataEntry = true
                 print("""
                 What action would you like to take next?
@@ -198,6 +197,7 @@ struct SwiftPlayground {
                     } else {
                         dataEntry = true
                     }
+                }
 
                 if userChoice == "4" {
                     print("What is the name of the Item you are adding?")
@@ -250,60 +250,62 @@ struct SwiftPlayground {
                         continue
                     }
 
-                    try dbQueue.read { db in
+                    var borrowerIDList: [Int] = []
+                    var itemIDList: [Int] = []
+
+                    
+                    
+                    try dbQueue.write { db in
                         let borrowerList = try Borrowers.fetchAll(db)
                         for borrower in borrowerList {
                             print(borrower)
-
-                        let borrowerIDList = try dbQueue.read {db in
-                            try Int.fetchAll(db, sql: "SELECT BorrowerID FROM Borrowers")
                         }
 
-                        let itemIDList = try dbQueue.read {db in
-                            try Int.fetchAll(db, sql: "SELECT ItemID FROM Items")
-                        }
+                        let borrowerIDList = try Int.fetchAll(db, sql: "SELECT BorrowerID FROM Borrowers")
 
+                        let itemIDList = try Int.fetchAll(db, sql: "SELECT ItemID FROM Items")
+                    
                         print("""
                         For the above list of borrowers, which person is borrowing the item? 
                         Enter the id number of the borrower
-                        """) 
+                        """)
 
                         guard let userBorrowerIDInput = readLine(), !userBorrowerIDInput.isEmpty else {
-                            print("BorrowerID is required")
                             dataEntry = false
-                            continue
+                            return print("BorrowerID is required")
                         }
-                        
-                        guard let borrowerIDNum = Int(userBorrowerIDInput), 
-                        borrowerIDList.contains(borrowerIDNum) else {
-                            print("error, please enter a number for the ID that")
+
+                        guard let userBorrowerIDNum = Int(userBorrowerIDInput), borrowerIDList.contains(userBorrowerIDNum) else {
                             dataEntry = false
-                            continue
+                            return print("Please enter a number corresponding to a borrower ID")
+                            
                         }
 
                         let itemList = try Items.fetchAll(db)
-                        for item in borrowerList {
+                        for item in itemList {
                             print(item)
+                        }
 
                         print("""
-                        For the above list of items, which item would the borrower like to issue?
-                        Enter the id number of the item.
-                        """) 
+                        For the above list of items, which item would the borrower like to borrow?
+                        Enter the ID number of the item requested
+                        """)
 
                         guard let userItemIDInput = readLine(), !userItemIDInput.isEmpty else {
-                            print("ItemID is required")
                             dataEntry = false
-                            continue
-                        }
-                        
-                        guard let itemIDNum = Int(userItemIDInput), 
-                        itemIDList.contains(itemIDNum) else {
-                            print("error, please enter a number for the ID that is on the list of items")
-                            dataEntry = false
-                            continue
+                            return print("ItemID is required")
                         }
 
+                        guard let userItemIDNum = Int(userItemIDInput), itemIDList.contains(userItemIDNum) else {
+                            dataEntry = false
+                            return print("Please enter a number corresponding to an item ID")
+                            
                         }
+                        
+                        
+                        let newLoan = Loans(id: nil, dateOfIssue: userIssueDate, dateOfReturn: userReturnDate, dueDate: userDueDate, borrowerID: userBorrowerIDNum, itemID: userItemIDNum)
+                        try newLoan.insert(db)
+                        
                     }
                 }
 
@@ -320,20 +322,19 @@ struct SwiftPlayground {
                 }
 
                 if userChoice == "7" {
-                    print("Thanks for using this database.")
-                    dataEntry = false
+                    print("Thanks for using the Japanese Item Tracking Database")
+                    break
                 }
 
                 else {
                     print("Please enter one of the options")
                     dataEntry = true
                 }
-            }
-        } while dataEntry == true
-
-        } catch {
-            print("The error that happened is: \(error)")
+            } while dataEntry == true
+        } catch{
+            print("There was an error: \(error)")
             exit(1)
         }
-    }
+    } 
 }
+
