@@ -256,7 +256,7 @@ struct SwiftPlayground {
                         Enter the id number of the borrower
                         """)
 
-                        guard let userBorrowerID = readLine(), userBorrowerID? == [borrowerList.Borrowers.Columns.id]
+                        guard let userBorrowerID = readLine(), userBorrowerID? == [Borrowers.id]
                         }
                     }
                 }
