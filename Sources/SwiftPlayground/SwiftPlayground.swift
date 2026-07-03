@@ -43,7 +43,7 @@ struct Loans: Identifiable, Codable, FetchableRecord, PersistableRecord, TableRe
     let itemID: Int
     
     func summary() -> String {
-        return "This item with id: \(itemID) was issued on \(dateOfIssue),  is due back: \(dueDate) from borrower: \(borrowerID)"
+        return "This item with id: \(itemID) was issued on \(dateOfIssue), is due back: \(dueDate) from borrower: \(borrowerID)"
     }
 
     enum CodingKeys: String, CodingKey {
@@ -98,8 +98,6 @@ struct SwiftPlayground {
         var dataEntry = true
         var userYearLevel: String? = nil
 
-        
-
         var dbQueue: DatabaseQueue
 
         do {
@@ -121,7 +119,7 @@ struct SwiftPlayground {
 
                 guard let userChoice = readLine(), !userChoice.isEmpty else {
                     print("Please enter one of the options")
-                    dataEntry = false
+                    dataEntry = true
                     continue
                 }
 
@@ -148,28 +146,28 @@ struct SwiftPlayground {
                     print("What is the first name of the Borrower you are adding?")
                     guard let userBorrowerFirstName = readLine(), !userBorrowerFirstName.isEmpty else {
                         print("First Name is required")
-                        dataEntry = false
+                        dataEntry = true
                         continue
                     }
 
                     print("What is the last name of the Borrower you are adding?")
                     guard let userBorrowerLastName = readLine(), !userBorrowerLastName.isEmpty else {
                         print("Last name is required")
-                        dataEntry = false
+                        dataEntry = true
                         continue
                     }
 
                     print("What is the email address of the Borrower you are adding?")
                     guard let userBorrowerEmail = readLine(), !userBorrowerEmail.isEmpty else {
                         print("Email is required")
-                        dataEntry = false
+                        dataEntry = true
                         continue
                     }
 
                     print("Is the borrower a Student or a Staff? Enter 1, if they are a Student, enter 2, if they are Staff.")
                     guard let userBorrowerTypeInput = readLine(), !userBorrowerTypeInput.isEmpty else {
                         print("Borrower type is required")
-                        dataEntry = false
+                        dataEntry = true
                         continue
                     }
 
@@ -178,7 +176,7 @@ struct SwiftPlayground {
                         print("What is the year level of the Student? Year level should be between 9 and 13")
                         guard var userYearLevel = readLine(), ["9", "10", "11", "12", "13"].contains(userYearLevel) else {
                             print("Year level should be a number between 9 and 13")
-                            dataEntry = false
+                            dataEntry = true
                             continue
                         }
                         try dbQueue.write { db in
@@ -203,21 +201,21 @@ struct SwiftPlayground {
                     print("What is the name of the Item you are adding?")
                     guard let userItemName = readLine(), !userItemName.isEmpty else {
                         print("Item Name is required")
-                        dataEntry = false
+                        dataEntry = true
                         continue
                     }
 
                     print("What is the type of item you are adding? eg: book, movie, textbook")
                     guard let userItemType = readLine(), !userItemType.isEmpty else {
                         print("Item Type is required")
-                        dataEntry = false
+                        dataEntry = true
                         continue
                     }
 
                     print("What is the condition of the item you are adding? eg: good, fair, bad")
                     guard let userItemCondition = readLine(), !userItemCondition.isEmpty else {
                         print("Item condition is required")
-                        dataEntry = false
+                        dataEntry = true
                         continue
                     }
 
@@ -231,7 +229,7 @@ struct SwiftPlayground {
                     print("What is the date of issue? Date format should be YYYY/MM/DD")
                     guard let userIssueDate = readLine(), !userIssueDate.isEmpty else {
                         print("Date of Issue is required")
-                        dataEntry = false
+                        dataEntry = true
                         continue
                     }
 
@@ -246,7 +244,7 @@ struct SwiftPlayground {
                     print("What is the due date of the item? date format is still: YYYY/MM/DD")
                     guard let userDueDate = readLine(), !userDueDate.isEmpty else {
                         print("Due Date is required")
-                        dataEntry = false
+                        dataEntry = true
                         continue
                     }
 
@@ -271,12 +269,12 @@ struct SwiftPlayground {
                         """)
 
                         guard let userBorrowerIDInput = readLine(), !userBorrowerIDInput.isEmpty else {
-                            dataEntry = false
+                            dataEntry = true
                             return print("BorrowerID is required")
                         }
 
                         guard let userBorrowerIDNum = Int(userBorrowerIDInput), borrowerIDList.contains(userBorrowerIDNum) else {
-                            dataEntry = false
+                            dataEntry = true
                             return print("Please enter a number corresponding to a borrower ID")
                             
                         }
@@ -292,12 +290,12 @@ struct SwiftPlayground {
                         """)
 
                         guard let userItemIDInput = readLine(), !userItemIDInput.isEmpty else {
-                            dataEntry = false
+                            dataEntry = true
                             return print("ItemID is required")
                         }
 
                         guard let userItemIDNum = Int(userItemIDInput), itemIDList.contains(userItemIDNum) else {
-                            dataEntry = false
+                            dataEntry = true
                             return print("Please enter a number corresponding to an item ID")
                             
                         }
@@ -314,7 +312,7 @@ struct SwiftPlayground {
                     try dbQueue.read { db in
                         var loanList = try Loans.fetchAll(db)
                         for loan in loanList {
-                            if Loans.Columns.dateOfReturn == nil {
+                            if loan.dateOfReturn == nil {
                                 print(loan.summary())
                             }
                         }
