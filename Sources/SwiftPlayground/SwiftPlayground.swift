@@ -246,7 +246,7 @@ struct SwiftPlayground {
                         continue
                     }
 
-                    // Add all the stuff for BorrowerID and ItemID here for writing a new loan to the database
+                    print("")
                 }
 
 
