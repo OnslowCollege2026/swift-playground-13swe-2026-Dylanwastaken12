@@ -250,13 +250,15 @@ struct SwiftPlayground {
                         let borrowerList = try Borrowers.fetchAll(db)
                         for borrower in borrowerList {
                             print(borrower)
+
+                        print("""
+                        For the above list of borrowers, which person is borrowing the item? 
+                        Enter the id number of the borrower
+                        """)
+
+                        guard let userBorrowerID = readLine(), userBorrowerID == [borrowerList.id]
                         }
                     }
-                    print("""
-                    For the above list of borrowers, which person is borrowing the item? 
-                    
-                    Enter the id number of the borrower
-                    """)
                 }
 
 
