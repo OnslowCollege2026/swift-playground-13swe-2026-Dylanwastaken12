@@ -259,10 +259,14 @@ struct SwiftPlayground {
                             try Int.fetchAll(db, sql: "SELECT BorrowerID FROM Borrowers")
                         }
 
+                        let itemIDList = try dbQueue.read {db in
+                            try Int.fetchAll(db, sql: "SELECT ItemID FROM Items")
+                        }
+
                         print("""
                         For the above list of borrowers, which person is borrowing the item? 
                         Enter the id number of the borrower
-                        """) //[borrowerIDList].contains(userBorrowerIDInput)
+                        """) 
 
                         guard let userBorrowerIDInput = readLine(), !userBorrowerIDInput.isEmpty else {
                             print("BorrowerID is required")
@@ -270,6 +274,35 @@ struct SwiftPlayground {
                             continue
                         }
                         
+                        guard let borrowerIDNum = Int(userBorrowerIDInput), 
+                        borrowerIDList.contains(borrowerIDNum) else {
+                            print("error, please enter a number for the ID that")
+                            dataEntry = false
+                            continue
+                        }
+
+                        let itemList = try Items.fetchAll(db)
+                        for item in borrowerList {
+                            print(item)
+
+                        print("""
+                        For the above list of items, which item would the borrower like to issue?
+                        Enter the id number of the item.
+                        """) 
+
+                        guard let userItemIDInput = readLine(), !userItemIDInput.isEmpty else {
+                            print("ItemID is required")
+                            dataEntry = false
+                            continue
+                        }
+                        
+                        guard let itemIDNum = Int(userItemIDInput), 
+                        itemIDList.contains(itemIDNum) else {
+                            print("error, please enter a number for the ID that is on the list of items")
+                            dataEntry = false
+                            continue
+                        }
+
                         }
                     }
                 }
