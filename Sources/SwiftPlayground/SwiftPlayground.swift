@@ -13,6 +13,10 @@ struct Borrowers: Identifiable, Codable, FetchableRecord, PersistableRecord, Tab
         return "Borrower: \(givenName) \(familyName) has the email: \(email) and is a \(borrowerType)"
     }
 
+    func summary2() -> String {
+        return "Borrower's 
+    }
+
 
     enum CodingKeys: String, CodingKey {
         case id = "BorrowerID"
